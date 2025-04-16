@@ -1,51 +1,69 @@
-import React, {useEffect, useRef} from 'react';
-import L from 'leaflet'; // Імпортуємо основну бібліотеку leaflet, яка використовується для роботи з картами
-import 'leaflet/dist/leaflet.css'; // Імпортуємо стилі для Leaflet, щоб карта відображалась коректно
-import 'leaflet-routing-machine/dist/leaflet-routing-machine.css'; // Імпорт стилів для перетаскування маршруту
-import 'leaflet-routing-machine'; // Імпорт бібліотеки для перетаскування маршруту
+import React, { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css'; // Підключаємо стилі для Leaflet
 
 const MapView = () => {
-	const mapRef = useRef(null); // посилання на контейнер карти
-	
-	useEffect(() => {
-		// Перевірка, чи карта вже ініціалізована
-		if (mapRef.current && !mapRef.current._leaflet_id) {
-			// Створення карти
-			const map = L.map(mapRef.current).setView([50.4501, 30.5236], 13); // Координати Києва
-			
-			// Додавання тайл-шарів
-			L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-			}).addTo(map);
-			
-			// Додавання маркера на карту з координатами Києва
-			L.marker([50.4501, 30.5236]).addTo(map).bindPopup('Центр Києва');
-      
-      // Встановлення маркера
+  const mapRef = useRef(null); // Створюємо посилання на DOM-елемент мапи
+  const [weatherData, setWeatherData] = useState(null); // Створюємо стан для збереження погодних шарів
+
+  const apiKey = '53f660d63998c9aff94a039be901d2ba'; // API ключ для OpenWeatherMap
+
+  // Функція для отримання URL погодних шарів
+  const getWeatherData = () => {
+    try {
+      // Посилання на шари: дощ, хмари, температура
+      const rainLayer = `https://tile.openweathermap.org/map/rain_new/{z}/{x}/{y}.png?appid=${apiKey}`;
+      const cloudsLayer = `https://tile.openweathermap.org/map/clouds_new/{z}/{x}/{y}.png?appid=${apiKey}`;
+      const tempLayer = `https://tile.openweathermap.org/map/temp_new/{z}/{x}/{y}.png?appid=${apiKey}`;
+
+      // Зберігаємо посилання на шари у стан
+      setWeatherData({ rainLayer, cloudsLayer, tempLayer });
+    } catch (error) {
+      // Виводимо помилку в консоль, якщо щось пішло не так
+      console.error('Помилка отримання погодних шарів:', error);
+    }
+  };
+
+  // Виконується при монтуванні компонента або при зміні weatherData
+  useEffect(() => {
+    if (weatherData) {
+      // Ініціалізуємо мапу та встановлюємо початковий вигляд (Київ)
+      const map = L.map(mapRef.current).setView([50.4501, 30.5236], 10);
+
+      // Додаємо супутниковий шар від ESRI
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri' // Підпис для карти
+      }).addTo(map);
+
+      // Додаємо погодні шари: дощ, хмари, температура
+      L.tileLayer(weatherData.rainLayer, { opacity: 0.8 }).addTo(map);
+      L.tileLayer(weatherData.cloudsLayer, { opacity: 0.7 }).addTo(map);
+      L.tileLayer(weatherData.tempLayer, { opacity: 0.3 }).addTo(map);
+
+      // Додаємо маркер в центрі Києва
+      L.marker([50.4501, 30.5236]).addTo(map).bindPopup('Центр Києва');
+
+      // ➕ Додаємо можливість ставити нові маркери при кліку на мапу
       map.on('click', (e) => {
         const { lat, lng } = e.latlng; // Отримуємо координати кліку
-
-        // Добавляємо координати кліку на карту у вигляді маркеру
-        const newMarker = L.marker([lat, lng]).addTo(map).bindPopup('Новий маркер').openPopup();
-        
+        L.marker([lat, lng]) // Створюємо новий маркер
+          .addTo(map) // Додаємо його на мапу
+          .bindPopup('Новий маркер') // Встановлюємо підказку
+          .openPopup(); // Відкриваємо підказку автоматично
       });
-			
-			// Створення маршруту за допомогою Leaflet Routing Machine
-      const routeControl = L.Routing.control({
-        waypoints: [
-          L.latLng(50.4501, 30.5236), // Початкова точка
-          L.latLng(50.4500, 30.5200), // Кінцева точка
-        ],
-        routeWhileDragging: true, // Дозвіл на перетаскування маршруту
-      }).addTo(map);
-		}
-	}, []);
-	
-	return (
-		<>
-			<div ref={mapRef} style={{width: '100%', height: '800px'}}></div>
-		</>
-	)
+    } else {
+      // Якщо weatherData ще немає — викликаємо функцію для його отримання
+      getWeatherData();
+    }
+  }, [weatherData]); // Залежність — weatherData
+
+  // Повертаємо контейнер для карти з фіксованою висотою
+  return (
+    <div ref={mapRef} style={{ width: '100%', height: '800px' }}>
+    
+    </div>
+);
 };
 
 export default MapView;
