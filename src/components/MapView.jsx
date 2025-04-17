@@ -31,15 +31,35 @@ const MapView = () => {
       // Ініціалізуємо мапу та встановлюємо початковий вигляд (Київ)
       const map = L.map(mapRef.current).setView([50.4501, 30.5236], 10);
 
-      // Додаємо супутниковий шар від ESRI
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri' // Підпис для карти
-      }).addTo(map);
+      // Стандартна
+      /*L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);*/
+      
+      // Супутник + підписи
+/*const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  attribution: 'Tiles &copy; Esri'
+});
 
+// Підписи
+const labels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+  attribution: 'Labels &copy; Esri',
+  pane: 'overlayPane'
+});
+
+// Добавляємо обидва
+satellite.addTo(map);
+labels.addTo(map);*/
+      
+      // Топографічна
+      L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+  attribution: 'Map data: &copy; OpenTopoMap'
+}).addTo(map);
+      
       // Додаємо погодні шари: дощ, хмари, температура
       L.tileLayer(weatherData.rainLayer, { opacity: 0.8 }).addTo(map);
-      L.tileLayer(weatherData.cloudsLayer, { opacity: 0.7 }).addTo(map);
-      L.tileLayer(weatherData.tempLayer, { opacity: 0.3 }).addTo(map);
+      L.tileLayer(weatherData.cloudsLayer, { opacity: 0.6 }).addTo(map);
+      L.tileLayer(weatherData.tempLayer, { opacity: 0 }).addTo(map);
 
       // Додаємо маркер в центрі Києва
       L.marker([50.4501, 30.5236]).addTo(map).bindPopup('Центр Києва');
