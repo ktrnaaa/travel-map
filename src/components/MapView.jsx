@@ -6,6 +6,8 @@ import 'leaflet/dist/leaflet.css'; // Підключаємо стилі для L
 const MapView = () => {
   const mapRef = useRef(null); // Створюємо посилання на DOM-елемент мапи
   const [weatherData, setWeatherData] = useState(null); // Створюємо стан для збереження погодних шарів
+  const [mapType, setMapType] = useState('standard'); // Стан для типу карти
+  const mapInstance = useRef(null); // Ссылка на экземпляр карты
 
   const apiKey = '53f660d63998c9aff94a039be901d2ba'; // API ключ для OpenWeatherMap
 
@@ -25,65 +27,82 @@ const MapView = () => {
     }
   };
 
-  // Виконується при монтуванні компонента або при зміні weatherData
+  // Виконується при монтуванні компонента або при зміні weatherData чи mapType
   useEffect(() => {
-    if (weatherData) {
+    if (!mapInstance.current) {
       // Ініціалізуємо мапу та встановлюємо початковий вигляд (Київ)
-      const map = L.map(mapRef.current).setView([50.4501, 30.5236], 10);
+      mapInstance.current = L.map(mapRef.current).setView([50.4501, 30.5236], 10);
+    }
 
-      // Стандартна
-      /*L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);*/
-      
-      // Супутник + підписи
-/*const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-  attribution: 'Tiles &copy; Esri'
-});
+    const map = mapInstance.current;
 
-// Підписи
-const labels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
-  attribution: 'Labels &copy; Esri',
-  pane: 'overlayPane'
-});
+    // Удаляем все слои перед добавлением нового
+    map.eachLayer((layer) => map.removeLayer(layer));
 
-// Добавляємо обидва
-satellite.addTo(map);
-labels.addTo(map);*/
-      
-      // Топографічна
+    // Додаємо шар в залежності від обраного типу карти
+    if (mapType === 'standard') {
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '',
+      }).addTo(map);
+    } else if (mapType === 'satellite') {
+      const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '',
+      });
+      const labels = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '',
+        pane: 'overlayPane',
+      });
+      satellite.addTo(map);
+      labels.addTo(map);
+    } else if (mapType === 'topographic') {
       L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-  attribution: 'Map data: &copy; OpenTopoMap'
-}).addTo(map);
-      
-      // Додаємо погодні шари: дощ, хмари, температура
+        attribution: '',
+      }).addTo(map);
+    }
+
+    // Додаємо погодні шари, якщо вони є
+    if (weatherData) {
       L.tileLayer(weatherData.rainLayer, { opacity: 0.8 }).addTo(map);
       L.tileLayer(weatherData.cloudsLayer, { opacity: 0.6 }).addTo(map);
       L.tileLayer(weatherData.tempLayer, { opacity: 0 }).addTo(map);
-
-      // Додаємо маркер в центрі Києва
-      L.marker([50.4501, 30.5236]).addTo(map).bindPopup('Центр Києва');
-
-      // ➕ Додаємо можливість ставити нові маркери при кліку на мапу
-      map.on('click', (e) => {
-        const { lat, lng } = e.latlng; // Отримуємо координати кліку
-        L.marker([lat, lng]) // Створюємо новий маркер
-          .addTo(map) // Додаємо його на мапу
-          .bindPopup('Новий маркер') // Встановлюємо підказку
-          .openPopup(); // Відкриваємо підказку автоматично
-      });
-    } else {
-      // Якщо weatherData ще немає — викликаємо функцію для його отримання
-      getWeatherData();
     }
-  }, [weatherData]); // Залежність — weatherData
 
-  // Повертаємо контейнер для карти з фіксованою висотою
+    // Додаємо маркер в центрі Києва
+    L.marker([50.4501, 30.5236]).addTo(map).bindPopup('Центр Києва');
+
+    // ➕ Додаємо можливість ставити нові маркери при кліку на мапу
+    map.on('click', (e) => {
+      const { lat, lng } = e.latlng; // Отримуємо координати кліку
+      L.marker([lat, lng]) // Створюємо новий маркер
+        .addTo(map) // Додаємо його на мапу
+        .bindPopup('Новий маркер') // Встановлюємо підказку
+        .openPopup(); // Відкриваємо підказку автоматично
+    });
+  }, [weatherData, mapType]); // Залежності — weatherData та mapType
+  
   return (
-    <div ref={mapRef} style={{ width: '100%', height: '800px' }}>
-    
+    <div>
+      <div
+        ref={mapRef}
+        className="w-auto h-screen">
+      </div>
+      
+      <div
+        className="absolute top-4 right-4 flex flex-col space-y-2 z-10"
+        style={{ position: 'absolute', top: '1rem', right: '1rem', zIndex: 1000 }}
+      >
+        <button onClick={() => setMapType('standard')} className="px-4 py-2 bg-blue-500 text-white rounded">
+          Стандартна
+        </button>
+        <button onClick={() => setMapType('satellite')} className="px-4 py-2 bg-blue-500 text-white rounded">
+          Супутникова
+        </button>
+        <button onClick={() => setMapType('topographic')} className="px-4 py-2 bg-blue-500 text-white rounded">
+          Топографічна
+        </button>
+      </div>
     </div>
-);
+  );
 };
 
 export default MapView;
