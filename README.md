@@ -15,25 +15,29 @@
 ## Структура гілок
 
 - `main` — єдина продакшн-гілка
-- `PROJ-123-name` — вторинні гілки для розробки
-- `feature/PROJ-123-name` — вторинні гілки для розробки
+- `PROJ-123-name` — вторинні гілки для розробки (у кожного вона буде своя)
 
 ---
 
-## 1. Створення фічевої гілки
+## 1. Створення гілки
 
-1.1. Переключитись на `main`:
+1.1. Переключитись на `main` ОБОВ'ЯЗКОВО!!!:
 ```bash
 git checkout main
 git pull origin main
 ```
-
-1.2. Створити гілку із задачею JIRA:
+1.2. Видалити старі локальні гілки після останнього коміту (якщо такі є):
 ```bash
-git checkout -b feature/PROJ-123-short-description
+git branch
+git branch -D назва старої гілки
 ```
 
-> `PROJ-123` — це ід задачі в Jira
+1.3. Створити гілку із задачею JIRA ОБОВ'ЯЗКОВО!!!:
+```bash
+git checkout -b PROJ-123-short-description
+```
+
+> `PROJ-123` — це ід задачі в Jira (Ключ)
 
 ---
 
@@ -54,16 +58,16 @@ git commit -m "PROJ-123: Додано форму логіну"
 
 ## 3. Push фічі та PR
 
-3.1. Надіслати гілку на сервер:
+3.1. Надіслати СВОЮ СТВОРЕНУ гілку на сервер:
 ```bash
-git push -u origin feature/PROJ-123-short-description
+git push origin PROJ-123-short-description
 ```
 
-3.2. Створити Pull Request з цієї гілки в `main`
+3.2. Створити Pull Request з цієї гілки в `main` (вже на самому сайті GitHub):
 
 > У описі PR вказуй ід Jira + що зроблено
 
-3.3. Після ревію і approve злити PR через `Squash and merge`
+3.3. Після ревію і approve PR буде злито через `Squash and merge`
 
 ---
 
