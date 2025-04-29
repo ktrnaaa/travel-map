@@ -175,9 +175,13 @@ const MapView = () => {
       satellite.addTo(map);
       labels.addTo(map);
     } else if (mapType === 'topographic') {
-      L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+      /*L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
         attribution: '',
-      }).addTo(map);
+      }).addTo(map);*/
+      L.tileLayer('https://{s}.tile.thunderforest.com/outdoors/{z}/{x}/{y}.png?apikey=97187d076fc74bc8967f2ec4e6c56a28', {
+  attribution: 'Maps © Thunderforest, Data © OpenStreetMap contributors',
+  maxZoom: 22
+}).addTo(map);
     }
     
       if (weatherData?.tempLayer) {
