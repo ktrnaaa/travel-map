@@ -1,3 +1,4 @@
+// eslint-disable-next-line react/prop-types
 export default function SupportButton({ onClick }) {
   const handleClick = () => {
     console.log('click');

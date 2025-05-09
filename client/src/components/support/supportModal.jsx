@@ -12,16 +12,23 @@ export default function SupportModal({ onClose }) {
   const [view, setView] = useState('form'); // додаємо стейт для управління видом (форма чи адмінка)
   const [reports, setReports] = useState([]); // для збереження списку репортів
 
-  const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
-  const handleClose = () => { if (isClosing) return; setIsClosing(true); setIsVisible(false); };
-  
-  const handleSubmit = async (e) => {
+  const handleChange = e => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleClose = () => {
+    if (isClosing) return;
+    setIsClosing(true);
+    setIsVisible(false);
+  };
+
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       const { status } = await axios.post('http://localhost:4000/support', form);
       if (status === 200) {
         setSubmitted(true);
-        setTimeout(() => { setSubmitted(false); handleClose(); }, 2000);
+        setTimeout(() => {
+          setSubmitted(false);
+          handleClose();
+        }, 2000);
       }
     } catch (err) {
       console.error('Помилка при надсиланні:', err);
@@ -38,7 +45,8 @@ export default function SupportModal({ onClose }) {
   // Для отримання репортів з сервера (можна налаштувати API)
   useEffect(() => {
     if (view === 'admin') {
-      axios.get('http://localhost:4000/support') // Заміни на своє API
+      axios
+        .get('http://localhost:4000/support') // Заміни на своє API
         .then(res => setReports(res.data))
         .catch(err => console.error('Помилка при отриманні репортів:', err));
     }
@@ -53,7 +61,7 @@ export default function SupportModal({ onClose }) {
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
         style={{ display: isVisible ? 'flex' : 'none', zIndex: 1000 }}
-        onAnimationComplete={(def) => {
+        onAnimationComplete={def => {
           if (def === 'exit') {
             console.log('Анімація завершена, викликаємо onClose');
             if (typeof onClose === 'function') onClose();
@@ -68,11 +76,17 @@ export default function SupportModal({ onClose }) {
           className={`relative w-full max-w-md p-6 rounded-xl shadow-lg transition-colors duration-300 ${theme === 'dark' ? 'bg-[#1e1b4b] text-white' : 'bg-[#d1fae5] text-[#065f46]'}`}
         >
           <div className="absolute top-3 right-3 flex gap-3">
-            <button onClick={toggleTheme} title="Змінити тему"><FaAdjust /></button>
+            <button onClick={toggleTheme} title="Змінити тему">
+              <FaAdjust />
+            </button>
             {view === 'form' && (
-              <button onClick={() => setView('admin')} title="Адмінка"><FaTools /></button>
+              <button onClick={() => setView('admin')} title="Адмінка">
+                <FaTools />
+              </button>
             )}
-            <button onClick={handleClose} title="Закрити"><FaTimes /></button>
+            <button onClick={handleClose} title="Закрити">
+              <FaTimes />
+            </button>
           </div>
 
           {view === 'admin' ? (
@@ -111,12 +125,53 @@ export default function SupportModal({ onClose }) {
                 <form onSubmit={handleSubmit} className="space-y-4 mt-6">
                   <h2 className="text-2xl font-bold text-center mb-4">Звернення до підтримки</h2>
 
-                  <div><label className="block mb-1">Ім'я:</label><input name="name" value={form.name} onChange={handleChange} required className="w-full p-2 rounded border border-gray-400 bg-transparent outline-none" /></div>
-                  <div><label className="block mb-1">Email:</label><input type="email" name="email" value={form.email} onChange={handleChange} required className="w-full p-2 rounded border border-gray-400 bg-transparent outline-none" /></div>
-                  <div><label className="block mb-1">Тема:</label><input name="subject" value={form.subject} onChange={handleChange} required className="w-full p-2 rounded border border-gray-400 bg-transparent outline-none" /></div>
-                  <div><label className="block mb-1">Повідомлення:</label><textarea name="message" rows="4" value={form.message} onChange={handleChange} required className="w-full p-2 rounded border border-gray-400 bg-transparent outline-none resize-none" /></div>
+                  <div>
+                    <label className="block mb-1">Ім'я:</label>
+                    <input
+                      name="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-2 rounded border border-gray-400 bg-transparent outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1">Email:</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-2 rounded border border-gray-400 bg-transparent outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1">Тема:</label>
+                    <input
+                      name="subject"
+                      value={form.subject}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-2 rounded border border-gray-400 bg-transparent outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-1">Повідомлення:</label>
+                    <textarea
+                      name="message"
+                      rows="4"
+                      value={form.message}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-2 rounded border border-gray-400 bg-transparent outline-none resize-none"
+                    />
+                  </div>
 
-                  <button type="submit" className={`w-full py-2 rounded font-semibold transition ${theme === 'dark' ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'bg-emerald-500 hover:bg-emerald-600 text-white'}`}>
+                  <button
+                    type="submit"
+                    className={`w-full py-2 rounded font-semibold transition ${theme === 'dark' ? 'bg-indigo-600 hover:bg-indigo-700 text-white' : 'bg-emerald-500 hover:bg-emerald-600 text-white'}`}
+                  >
                     Надіслати
                   </button>
                 </form>
