@@ -1,6 +1,7 @@
 import axios from 'axios';
 import L from 'leaflet';
 import React, { useEffect, useRef, useState } from 'react';
+import 'leaflet/dist/leaflet.css';
 
 const MapView = () => {
   const mapRef = useRef(null);
