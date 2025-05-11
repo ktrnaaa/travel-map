@@ -29,12 +29,15 @@ export default [
 
     // Налаштування мови JavaScript
     languageOptions: {
-      ecmaVersion: 2020, // Підтримка сучасного JS
-      globals: globals.browser, // Глобальні змінні браузера (window, document тощо)
+      ecmaVersion: 2020,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
       parserOptions: {
-        ecmaVersion: 'latest', // Використовувати найновішу версію JS
-        ecmaFeatures: { jsx: true }, // Увімкнути підтримку JSX
-        sourceType: 'module', // Підтримка імпортів/експортів
+        ecmaVersion: 'latest',
+        ecmaFeatures: { jsx: true },
+        sourceType: 'module',
       },
     },
 
@@ -61,6 +64,8 @@ export default [
       // Помилка, якщо імпорт не знайдено
       'import/no-unresolved': 'error',
 
+      'react/react-in-jsx-scope': 'off',
+
       // Вимога порядку імпортів
       'import/order': [
         'warn',
@@ -82,6 +87,11 @@ export default [
     settings: {
       react: {
         version: 'detect',
+      },
+      'import/resolver': {
+        node: {
+          extensions: ['.js', '.jsx'],
+        },
       },
     },
   },

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 
 export default function useTheme() {
@@ -11,7 +10,7 @@ export default function useTheme() {
     applyTheme(savedTheme);
   }, []);
 
-  const applyTheme = (themeToApply) => {
+  const applyTheme = themeToApply => {
     // Оновлюємо клас на documentElement
     if (themeToApply === 'dark') {
       document.documentElement.classList.add('dark');

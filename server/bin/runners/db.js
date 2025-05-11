@@ -1,16 +1,22 @@
-// Підключення до бази даних
-import mongoose from 'mongoose';
-import colors from 'colors';
+import _colors from 'colors';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
 dotenv.config();
 
 const connectDB = async () => {
   const dbName = process.env.DB_URL;
   try {
     await mongoose.connect(dbName);
-    console.log(`Connected to DB user: ${dbName}`.bgGreen.black);
+
+    console.log('\n==============================='.green);
+    console.log('✅ SUCCESS:'.bold + ' Connected to DB'.green);
+    console.log('📦 Database:'.bold + ` ${dbName}`.cyan);
+    console.log('==============================='.green);
   } catch (err) {
-    console.log(`'not connected', ${err}`.bgYellow.red.bold);
+    console.log('\n==============================='.red);
+    console.log('❌ ERROR:'.bold + ' Failed to connect to DB'.red);
+    console.log(`📄 ${err.message}`.yellow);
+    console.log('==============================='.red);
   }
 };
 

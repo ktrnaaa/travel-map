@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import { getReports } from '../controller/support.js';
 
 const router = Router();

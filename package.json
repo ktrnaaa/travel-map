@@ -1,6 +1,7 @@
 {
   "name": "travel-map-root",
   "private": true,
+  "type": "module",
   "scripts": {
     "lint": "eslint \"client/src/**/*.{js,jsx}\" \"server/**/*.{js,jsx}\"",
     "format": "prettier --write \"client/**/*.{js,jsx,json,css,md}\" \"server/**/*.{js,jsx,json,css,md}\""

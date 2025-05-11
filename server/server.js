@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 });
 
 // error hendler - midleware для обробки помилок. Тобто спочатку вище формуємо помилку, а потім всі помилки передаються сюди
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   const { status = 404, message = 'Internal Server Error' } = err; // Беремо статус помилки
   console.error(status);
   console.error(message);

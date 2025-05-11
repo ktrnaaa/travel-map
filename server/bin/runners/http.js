@@ -1,5 +1,5 @@
-// Імпорт налаштувань для підняття сервера
 import http from 'http';
+
 import server from '../../server.js';
 
 export default function startServer() {
@@ -7,10 +7,16 @@ export default function startServer() {
   const PORT = 4000;
 
   httpServer.listen(PORT, () => {
-    try {
-      console.log(`HTTP Server is running on port ${PORT}`.bgGreen.black);
-    } catch (err) {
-      console.log('HTTP Server is not started!'.bgYellow.red.bold);
-    }
+    console.log('==============================='.green);
+    console.log('🚀 SERVER STARTED:'.bold + ' HTTP server is running'.green);
+    console.log('🌐 URL:'.bold + ` http://localhost:${PORT}`.cyan);
+    console.log('==============================='.green);
+  });
+
+  httpServer.on('error', err => {
+    console.log('==============================='.red);
+    console.log('❌ SERVER ERROR:'.bold + ' Failed to start HTTP server'.red);
+    console.log(`📄 ${err.message}`.yellow);
+    console.log('==============================='.red);
   });
 }

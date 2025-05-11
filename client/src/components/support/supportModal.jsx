@@ -10,8 +10,8 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
   const [reports, setReports] = useState([]);
   const [isClosing, setIsClosing] = useState(false);
 
-  const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
-  
+  const handleChange = e => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+
   const handleClose = () => {
     if (isClosing) return;
     setIsClosing(true);
@@ -19,16 +19,16 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
       onClose();
     }, 300);
   };
-  
-  const handleSubmit = async (e) => {
+
+  const handleSubmit = async e => {
     e.preventDefault();
     try {
       const { status } = await axios.post('http://localhost:4000/support', form);
       if (status === 200) {
         setSubmitted(true);
-        setTimeout(() => { 
-          setSubmitted(false); 
-          handleClose(); 
+        setTimeout(() => {
+          setSubmitted(false);
+          handleClose();
         }, 2000);
       }
     } catch (err) {
@@ -39,7 +39,8 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
 
   useEffect(() => {
     if (view === 'admin') {
-      axios.get('http://localhost:4000/support')
+      axios
+        .get('http://localhost:4000/support')
         .then(res => setReports(res.data))
         .catch(err => console.error('Помилка при отриманні репортів:', err));
     }
@@ -54,7 +55,7 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
       card: 'bg-gray-800',
       border: 'border-gray-600',
       textMuted: 'text-gray-400',
-      iconButton: 'hover:bg-gray-700'
+      iconButton: 'hover:bg-gray-700',
     },
     light: {
       bg: 'bg-[#d1fae5]',
@@ -64,8 +65,8 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
       card: 'bg-white',
       border: 'border-gray-300',
       textMuted: 'text-gray-500',
-      iconButton: 'hover:bg-gray-200'
-    }
+      iconButton: 'hover:bg-gray-200',
+    },
   };
 
   const currentThemeClass = themeClasses[currentTheme];
@@ -76,38 +77,38 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center"
           initial={{ opacity: 0, backdropFilter: 'blur(0px)' }}
-          animate={{ 
+          animate={{
             opacity: 1,
             backdropFilter: 'blur(8px)',
             backgroundColor: 'rgba(0,0,0,0.5)',
-            transition: { duration: 0.3 }
+            transition: { duration: 0.3 },
           }}
-          exit={{ 
-            opacity: 0, 
+          exit={{
+            opacity: 0,
             backdropFilter: 'blur(0px)',
-            transition: { duration: 0.3, ease: "easeInOut" }
+            transition: { duration: 0.3, ease: 'easeInOut' },
           }}
           style={{ zIndex: 1000 }}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ 
-              opacity: 1, 
+            animate={{
+              opacity: 1,
               scale: 1,
               y: 0,
-              transition: { 
+              transition: {
                 duration: 0.3,
-                ease: "easeOut"
-              }
+                ease: 'easeOut',
+              },
             }}
-            exit={{ 
-              opacity: 0, 
+            exit={{
+              opacity: 0,
               scale: 0.95,
               y: -10,
-              transition: { 
+              transition: {
                 duration: 0.2,
-                ease: "easeIn"
-              }
+                ease: 'easeIn',
+              },
             }}
             className={`relative w-full max-w-md mx-4 p-6 rounded-xl shadow-lg ${currentThemeClass.bg} ${currentThemeClass.text}`}
           >
@@ -123,8 +124,8 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
                   <FaArrowLeft />
                 </motion.button>
               )}
-              
-              <motion.button 
+
+              <motion.button
                 onClick={toggleTheme}
                 title="Змінити тему"
                 className={`p-2 rounded-full ${currentThemeClass.iconButton} transition-colors`}
@@ -133,10 +134,10 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
               >
                 <FaAdjust />
               </motion.button>
-              
+
               {view === 'form' && (
-                <motion.button 
-                  onClick={() => setView('admin')} 
+                <motion.button
+                  onClick={() => setView('admin')}
                   title="Адмінка"
                   className={`p-2 rounded-full ${currentThemeClass.iconButton} transition-colors`}
                   whileHover={{ scale: 1.1 }}
@@ -145,9 +146,9 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
                   <FaTools />
                 </motion.button>
               )}
-              
-              <motion.button 
-                onClick={handleClose} 
+
+              <motion.button
+                onClick={handleClose}
                 title="Закрити"
                 className={`p-2 rounded-full ${currentThemeClass.iconButton} transition-colors`}
                 whileHover={{ scale: 1.1 }}
@@ -163,7 +164,7 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
                 <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-2">
                   {reports.length > 0 ? (
                     reports.map((report, index) => (
-                      <motion.div 
+                      <motion.div
                         key={index}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -172,7 +173,9 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
                       >
                         <h3 className="font-semibold">{report.subject}</h3>
                         <p className="mt-1">{report.message}</p>
-                        <p className={`text-sm mt-2 ${currentThemeClass.textMuted}`}>{report.date}</p>
+                        <p className={`text-sm mt-2 ${currentThemeClass.textMuted}`}>
+                          {report.date}
+                        </p>
                       </motion.div>
                     ))
                   ) : (
@@ -183,34 +186,31 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
             ) : (
               <>
                 {submitted ? (
-                  <motion.div 
+                  <motion.div
                     className="text-center space-y-2 mt-10"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <motion.h2 
+                    <motion.h2
                       className="text-2xl font-semibold"
                       initial={{ y: -10 }}
                       animate={{ y: 0 }}
                     >
                       Дякуємо за звернення!
                     </motion.h2>
-                    <motion.p
-                      initial={{ y: 10 }}
-                      animate={{ y: 0 }}
-                    >
+                    <motion.p initial={{ y: 10 }} animate={{ y: 0 }}>
                       Ми зв'яжемося з вами якнайшвидше.
                     </motion.p>
                   </motion.div>
                 ) : (
-                  <motion.form 
-                    onSubmit={handleSubmit} 
+                  <motion.form
+                    onSubmit={handleSubmit}
                     className="space-y-4 mt-6"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   >
-                    <motion.h2 
+                    <motion.h2
                       className="text-2xl font-bold text-center mb-4"
                       initial={{ y: -20 }}
                       animate={{ y: 0 }}
@@ -224,12 +224,12 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
                       transition={{ delay: 0.1 }}
                     >
                       <label className="block mb-1">Ім'я:</label>
-                      <input 
-                        name="name" 
-                        value={form.name} 
-                        onChange={handleChange} 
-                        required 
-                        className={`w-full p-2 rounded border ${currentThemeClass.input} outline-none transition-colors`} 
+                      <input
+                        name="name"
+                        value={form.name}
+                        onChange={handleChange}
+                        required
+                        className={`w-full p-2 rounded border ${currentThemeClass.input} outline-none transition-colors`}
                       />
                     </motion.div>
 
@@ -239,13 +239,13 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
                       transition={{ delay: 0.15 }}
                     >
                       <label className="block mb-1">Email:</label>
-                      <input 
-                        type="email" 
-                        name="email" 
-                        value={form.email} 
-                        onChange={handleChange} 
-                        required 
-                        className={`w-full p-2 rounded border ${currentThemeClass.input} outline-none transition-colors`} 
+                      <input
+                        type="email"
+                        name="email"
+                        value={form.email}
+                        onChange={handleChange}
+                        required
+                        className={`w-full p-2 rounded border ${currentThemeClass.input} outline-none transition-colors`}
                       />
                     </motion.div>
 
@@ -255,12 +255,12 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
                       transition={{ delay: 0.2 }}
                     >
                       <label className="block mb-1">Тема:</label>
-                      <input 
-                        name="subject" 
-                        value={form.subject} 
-                        onChange={handleChange} 
-                        required 
-                        className={`w-full p-2 rounded border ${currentThemeClass.input} outline-none transition-colors`} 
+                      <input
+                        name="subject"
+                        value={form.subject}
+                        onChange={handleChange}
+                        required
+                        className={`w-full p-2 rounded border ${currentThemeClass.input} outline-none transition-colors`}
                       />
                     </motion.div>
 
@@ -270,13 +270,13 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
                       transition={{ delay: 0.25 }}
                     >
                       <label className="block mb-1">Повідомлення:</label>
-                      <textarea 
-                        name="message" 
-                        rows="4" 
-                        value={form.message} 
-                        onChange={handleChange} 
-                        required 
-                        className={`w-full p-2 rounded border ${currentThemeClass.input} outline-none resize-none transition-colors`} 
+                      <textarea
+                        name="message"
+                        rows="4"
+                        value={form.message}
+                        onChange={handleChange}
+                        required
+                        className={`w-full p-2 rounded border ${currentThemeClass.input} outline-none resize-none transition-colors`}
                       />
                     </motion.div>
 
@@ -285,8 +285,8 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.3 }}
                     >
-                      <motion.button 
-                        type="submit" 
+                      <motion.button
+                        type="submit"
                         className={`w-full py-2 rounded font-semibold ${currentThemeClass.button} text-white transition-colors`}
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}

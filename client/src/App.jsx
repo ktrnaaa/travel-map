@@ -1,8 +1,10 @@
 import React from 'react';
-import './App.css';
+
+import Announcements from './components/announcements/announcements';
 import MapView from './components/MapView';
-import Announcements from './components/announcements/Announcements';
 import SupportModalWrapper from './components/support/supportModalWrapper';
+
+import './App.css';
 
 function App() {
   return (

@@ -15,13 +15,9 @@ export default function SupportModalWrapper() {
   return (
     <>
       <SupportButton onClick={toggleSupportModal} />
-      
+
       {showSupport && (
-        <SupportModal 
-          onClose={toggleSupportModal} 
-          toggleTheme={toggleTheme}
-          currentTheme={theme}
-        />
+        <SupportModal onClose={toggleSupportModal} toggleTheme={toggleTheme} currentTheme={theme} />
       )}
     </>
   );
