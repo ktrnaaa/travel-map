@@ -16,12 +16,13 @@ const MapView = () => {
   const [mapType, setMapType] = useState('standard');
   const mapInstance = useRef(null);
   const [markers, setMarkers] = useState([]);
+  const [tagInput, setTagInput] = useState('');
 
   // Стейт для модального вікна і даних маркерів
   const [modalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
-    category: '',
+    tags: [],
     files: [],
     fileUrls: [],
   });
@@ -128,10 +129,13 @@ const MapView = () => {
   // Функція для обробки змін у формі
   const handleFormChange = e => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    // Игнорируем поле tags, так как у нас особый обработчик для него
+    if (name !== 'tags') {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   // Функція для обробки зміни файлу
@@ -297,7 +301,7 @@ const MapView = () => {
 
     const data = new FormData();
     data.append('title', formData.title);
-    data.append('category', formData.category);
+    data.append('tags', JSON.stringify(formData.tags));
     data.append('lat', selectedMarker.lat);
     data.append('lng', selectedMarker.lng);
     data.append('private', formData.Private || false);
@@ -335,6 +339,23 @@ const MapView = () => {
     }
   };
 
+  const getTagColor = tag => {
+    const colors = [
+      'bg-blue-100 text-blue-800 border-blue-300',
+      'bg-green-100 text-green-800 border-green-300',
+      'bg-purple-100 text-purple-800 border-purple-300',
+      'bg-yellow-100 text-yellow-800 border-yellow-300',
+      'bg-red-100 text-red-800 border-red-300',
+      'bg-indigo-100 text-indigo-800 border-indigo-300',
+      'bg-pink-100 text-pink-800 border-pink-300',
+      'bg-teal-100 text-teal-800 border-teal-300',
+    ];
+
+    // Выбираем цвет на основе первого символа тега
+    const index = tag.charCodeAt(0) % colors.length;
+    return colors[index];
+  };
+
   return (
     <div>
       <div ref={mapRef} className="w-auto h-screen"></div>
@@ -359,65 +380,124 @@ const MapView = () => {
           <form onSubmit={handleSubmit} className="p-5 sm:p-7 pt-0">
             <div className="space-y-5">
               <div className="group -mt-1">
-                <label
-                  htmlFor="title"
-                  className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5 group-focus-within:text-blue-600 transition duration-200"
-                >
-                  НАЗВА
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleFormChange}
-                  className="w-full px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl
-                      text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200
-                      transition duration-200 text-sm sm:text-base"
-                  placeholder="Введіть назву маркера"
-                  required
-                />
-              </div>
-
-              <div className="group">
-                <label
-                  htmlFor="category"
-                  className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5 group-focus-within:text-blue-600 transition duration-200"
-                >
-                  КАТЕГОРІЯ
-                </label>
-                <div className="relative">
-                  <select
-                    id="category"
-                    name="category"
-                    value={formData.category}
+                <div className="group mb-5">
+                  <label
+                    htmlFor="title"
+                    className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5 group-focus-within:text-blue-600 transition duration-200"
+                  >
+                    НАЗВА
+                  </label>
+                  <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    value={formData.title}
                     onChange={handleFormChange}
                     className="w-full px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl
-                        text-gray-800 focus:border-blue-500 focus:ring focus:ring-blue-200
-                        transition duration-200 appearance-none text-sm sm:text-base"
+                      text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200
+                      transition duration-200 text-sm sm:text-base"
+                    placeholder="Введіть назву маркера"
                     required
+                  />
+                </div>
+                <div className="group">
+                  <label
+                    htmlFor="tags"
+                    className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5 group-focus-within:text-blue-600 transition duration-200"
                   >
-                    <option value="" disabled selected>
-                      Оберіть категорію
-                    </option>
-                    <option value="well">Вода</option>
-                    <option value="spring">Ночліг</option>
-                    <option value="water_machine">Їжа</option>
-                    <option value="water_machine">Краєвид</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <svg
-                      className="h-5 w-5 text-gray-400"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
+                    МІТКИ
+                  </label>
+
+                  <div className="flex">
+                    <input
+                      type="text"
+                      id="tagInput"
+                      value={tagInput}
+                      onChange={e => setTagInput(e.target.value)}
+                      onKeyDown={e => {
+                        if (e.key === 'Enter' && tagInput.trim()) {
+                          e.preventDefault();
+                          setFormData(prev => ({
+                            ...prev,
+                            tags: [...prev.tags, tagInput.trim()],
+                          }));
+                          setTagInput('');
+                        }
+                      }}
+                      className="flex-grow px-4 py-2.5 bg-white border-2 border-gray-200 rounded-l-xl
+      text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200
+      transition duration-200 text-sm sm:text-base"
+                      placeholder="Уведіть мітку"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (tagInput.trim()) {
+                          setFormData(prev => ({
+                            ...prev,
+                            tags: [...prev.tags, tagInput.trim()],
+                          }));
+                          setTagInput('');
+                        }
+                      }}
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-r-xl transition duration-200 flex items-center justify-center"
                     >
-                      <path
-                        fillRule="evenodd"
-                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 3a1 1 0 00-1 1v5H4a1 1 0 100 2h5v5a1 1 0 102 0v-5h5a1 1 0 100-2h-5V4a1 1 0 00-1-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <p className="text-xs text-gray-500 mt-1">
+                    Натисніть Enter або кнопку, щоб додати мітку
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {formData.tags.length > 0
+                      ? formData.tags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className={`${getTagColor(tag)} text-l font-medium px-3 py-1.5 rounded-full flex items-center shadow-sm border border-opacity-20 transition-all hover:shadow-md`}
+                          >
+                            #{tag}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setFormData(prev => ({
+                                  ...prev,
+                                  tags: prev.tags.filter((_, i) => i !== index),
+                                }));
+                              }}
+                              className="ml-1.5 text-gray-500 hover:text-red-600 transition-colors w-5 h-5 rounded-full
+  flex items-center justify-center bg-white bg-opacity-80 hover:bg-opacity-100
+  shadow-sm border border-gray-200 hover:border-red-300"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-3 w-3"
+                                viewBox="0 0 20 20"
+                                fill="currentColor"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </button>
+                          </span>
+                        ))
+                      : null}
                   </div>
                 </div>
               </div>
@@ -556,7 +636,7 @@ const MapView = () => {
                 {imagePreviews.length > 0 && (
                   <div className="mt-4">
                     <div className="text-xs font-semibold uppercase text-gray-500 mb-1.5">
-                      Передпрогляд
+                      Попередній перегляд
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {imagePreviews.map(item => (
@@ -576,11 +656,25 @@ const MapView = () => {
                           <button
                             type="button"
                             onClick={() => handleRemoveFile(item.id)}
-                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center
-                       opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                            className="absolute top-1.5 right-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center
+  shadow-md transform transition-all duration-200 hover:scale-110
+  opacity-0 group-hover:opacity-100"
                             disabled={loading}
                           >
-                            ×
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
                           </button>
                         </div>
                       ))}

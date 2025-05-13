@@ -1,8 +1,9 @@
 // components/support/SupportModalWrapper.js
 import { useState } from 'react';
+
+import useTheme from './hooks/useTheme';
 import SupportButton from './supportButton';
 import SupportModal from './supportModal';
-import useTheme from './hooks/useTheme';
 
 export default function SupportModalWrapper() {
   const [showSupport, setShowSupport] = useState(false);

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaTimes, FaAdjust, FaTools, FaArrowLeft } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { FaTimes, FaAdjust, FaTools, FaArrowLeft } from 'react-icons/fa';
 
 export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
