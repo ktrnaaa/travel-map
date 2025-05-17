@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Announcements from './components/announcements/announcements';
+import Announcements from './components/announcements/announcementModalWrapper';
 import MapView from './components/MapView';
 import SupportModalWrapper from './components/support/supportModalWrapper';
 
