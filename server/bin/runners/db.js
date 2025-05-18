@@ -1,4 +1,4 @@
-import _colors from 'colors';
+import colors from 'colors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 dotenv.config();

@@ -12,6 +12,8 @@ import morgan from 'morgan';
 
 // Роути
 import announcementsRouter from "./routes/annoucementsAdding.js";
+import getReportsRouter from './routes/main.js';
+import supportRouter from './routes/support.js';
 
 const app = express();
 app.use(morgan('combined'));
@@ -37,6 +39,8 @@ app.use(express.static(path.join(__dirname, '../client')));
 
 // Підключення роутів тут
 app.use('/', announcementsRouter);
+app.use('/', supportRouter);
+app.use('/', getReportsRouter);
 /*app.use('/', mainRouter);*/
 
 app.get('*', (req, res) => {
