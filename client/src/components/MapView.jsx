@@ -362,7 +362,7 @@ const MapView = () => {
       {modalOpen && (
         <div
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
-              bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl z-10
+              bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl z-1000
               w-11/12 sm:w-[450px] max-w-[95vw] overflow-hidden border border-gray-100"
         >
           <div className="relative bg-gradient-to-r from-blue-600 to-indigo-700 p-5 sm:p-6 pb-7">
