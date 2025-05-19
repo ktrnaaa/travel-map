@@ -200,7 +200,7 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
                       Дякуємо за звернення!
                     </motion.h2>
                     <motion.p initial={{ y: 10 }} animate={{ y: 0 }}>
-                      Ми зв'яжемося з вами якнайшвидше.
+                      Ми зв&apos;яжемося з вами якнайшвидше.
                     </motion.p>
                   </motion.div>
                 ) : (
@@ -223,7 +223,7 @@ export default function SupportModal({ onClose, toggleTheme, currentTheme }) {
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.1 }}
                     >
-                      <label className="block mb-1">Ім'я:</label>
+                      <label className="block mb-1">Ім&apos;я:</label>
                       <input
                         name="name"
                         value={form.name}

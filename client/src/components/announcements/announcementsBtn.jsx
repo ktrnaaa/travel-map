@@ -10,7 +10,7 @@ function ActionButton({ onClick }) {
       onClick={onClick}
     >
       <FaBullhorn className="text-xl" />
-      Оголошення
+      Створити
     </button>
   );
 }

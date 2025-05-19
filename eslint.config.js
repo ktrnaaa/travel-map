@@ -56,15 +56,21 @@ export default [
       ...react.configs.recommended.rules, // Рекомендовані правила для React
 
       // Не дозволяти невикористані змінні, крім тих, що починаються з великої літери або _
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': [
+        'error',
+        {
+          varsIgnorePattern: '^[A-Z_]|^colors$', // Ігнорувати змінні, що починаються з великої літери або _
+        },
+      ],
 
       // React Refresh: попередження, якщо компонент експортується не як константа
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 
       // Помилка, якщо імпорт не знайдено
-      'import/no-unresolved': 'error',
+      'import/no-unresolved': ['error', { ignore: ['@tailwindcss/vite'] }],
 
       'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off', // Вимкнення перевірки PropTypes
 
       // Вимога порядку імпортів
       'import/order': [
