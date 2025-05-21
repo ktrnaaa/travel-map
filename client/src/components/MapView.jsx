@@ -6,13 +6,12 @@ import { GiCompass } from 'react-icons/gi';
 import 'leaflet/dist/leaflet.css';
 
 const MapView = () => {
-  const [uploadProgress, setUploadProgress] = useState({}); // Объект для хранения прогресса загрузки каждого файла
+  const [uploadProgress, setUploadProgress] = useState({}); // Об'єкт для збереження прогресу завантаження кожного файлу
   const [imagePreviews, setImagePreviews] = useState([]); // Массив превью
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
   const mapRef = useRef(null);
-  const [weatherData, setWeatherData] = useState(null);
   const [mapType, setMapType] = useState('standard');
   const mapInstance = useRef(null);
   const [markers, setMarkers] = useState([]);
@@ -70,11 +69,6 @@ const MapView = () => {
       ).addTo(map);
     }
 
-    if (weatherData?.tempLayer) {
-      const tempLayer = L.tileLayer(weatherData.tempLayer, { opacity: 0.6 });
-      tempLayer.addTo(map);
-    }
-
     // Додаємо маркери на карту
     markers.forEach((marker, index) => {
       const markerIcon = L.divIcon({
@@ -117,8 +111,8 @@ const MapView = () => {
     };
 
     setMarkers(prev => [...prev, newMarker]);
-    setSelectedMarker(newMarker); // Устанавливаем текущий маркер
-    setModalOpen(true); // Открываем модальное окно
+    setSelectedMarker(newMarker); // Встановлюємо поточний маркер
+    setModalOpen(true); // Відкриваємо модальне вікно
   };
 
   // Функція для закриття модального вікна
@@ -129,7 +123,7 @@ const MapView = () => {
   // Функція для обробки змін у формі
   const handleFormChange = e => {
     const { name, value } = e.target;
-    // Игнорируем поле tags, так как у нас особый обработчик для него
+    // Ігноруємо поле tags, тому що у нас особливий обробник для нього
     if (name !== 'tags') {
       setFormData({
         ...formData,
@@ -139,12 +133,11 @@ const MapView = () => {
   };
 
   // Функція для обробки зміни файлу
-  // Функція для обробки зміни файлу
   const handleFileChange = async e => {
     const selectedFiles = Array.from(e.target.files);
 
     if (!selectedFiles || selectedFiles.length === 0) {
-      // Если файлы не выбраны, очищаем состояние
+      // Якщо файли не вибрані, очищаємо стан
       setFormData(prev => ({
         ...prev,
         files: [],
@@ -154,16 +147,16 @@ const MapView = () => {
       return;
     }
 
-    // Обновляем список файлов в состоянии
+    // Оновлюємо список файлів у стані
     setFormData(prev => ({
       ...prev,
       files: selectedFiles,
     }));
 
-    // Очищаем предыдущие превью
+    // Очищаємо попередні прев'ю
     setImagePreviews([]);
 
-    // Создаем превью для каждого выбранного файла
+    // Створюємо прев'ю для кожного вибраного файлу
     selectedFiles.forEach((file, index) => {
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
@@ -174,26 +167,26 @@ const MapView = () => {
       }
     });
 
-    // Начинаем загрузку каждого файла
+    // Починаємо завантаження кожного файлу
     const uploadFiles = async () => {
       setLoading(true);
       const fileUrls = [];
 
-      // Инициализируем прогресс загрузки для каждого файла
+      // Ініціалізуємо прогрес завантаження для кожного файлу
       const initialProgress = {};
       selectedFiles.forEach((file, index) => {
         initialProgress[index] = 0;
       });
       setUploadProgress(initialProgress);
 
-      // Загружаем каждый файл отдельно
+      // Завантажуємо кожен файл окремо
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
         const fileData = new FormData();
         fileData.append('file', file);
 
         try {
-          // Загружаем файл на сервер
+          // Завантажуємо файл на сервер
           const response = await axios.post('http://localhost:4000/api/upload', fileData, {
             headers: {
               'Content-Type': 'multipart/form-data',
@@ -209,7 +202,7 @@ const MapView = () => {
             },
           });
 
-          // Сохраняем URL файла
+          // Зберігаємо URL файлу
           if (response.data && response.data.url) {
             fileUrls.push(response.data.url);
           }
@@ -218,7 +211,7 @@ const MapView = () => {
         }
       }
 
-      // Обновляем массив URL-адресов в состоянии
+      // Оновлюємо масив URL-адрес у стані
       setFormData(prev => ({
         ...prev,
         fileUrls: fileUrls,
@@ -227,18 +220,18 @@ const MapView = () => {
       setLoading(false);
     };
 
-    // Запускаем загрузку файлов
+    // Запускаємо завантаження файлів
     if (selectedFiles.length > 0) {
       uploadFiles();
     }
   };
 
-  // Функция для удаления файла из списка
+  // Функція видалення файлу зі списку
   const handleRemoveFile = fileId => {
     // Если в процессе загрузки, не позволяем удалять файлы
     if (loading) return;
 
-    // Удаляем файл из всех массивов
+    // Видаляємо файл із усіх масивів
     setFormData(prev => {
       const updatedFiles = prev.files.filter((_, index) => index !== fileId);
       const updatedUrls = prev.fileUrls.filter((_, index) => index !== fileId);
@@ -250,10 +243,10 @@ const MapView = () => {
       };
     });
 
-    // Удаляем превью
+    // Видаляємо прев'ю
     setImagePreviews(prev => prev.filter(item => item.id !== fileId));
 
-    // Очищаем прогресс загрузки
+    // Очищаємо прогрес завантаження
     setUploadProgress(prev => {
       const newProgress = { ...prev };
       delete newProgress[fileId];
@@ -261,7 +254,7 @@ const MapView = () => {
     });
   };
 
-  // Функции для обработки событий drag and drop
+  // Функції обробки подій drag and drop
   const handleDragOver = e => {
     e.preventDefault();
     setIsDragging(true);
@@ -276,7 +269,7 @@ const MapView = () => {
     setIsDragging(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      // Создаем событие, похожее на onChange для input[type="file"]
+      // Створюємо подію, подібну до onChange для input[type="file"]
       const mockEvent = {
         target: {
           files: e.dataTransfer.files,
@@ -305,11 +298,11 @@ const MapView = () => {
     data.append('lat', selectedMarker.lat);
     data.append('lng', selectedMarker.lng);
     data.append('private', formData.Private || false);
-    // Добавляем URL файлов, если они уже загружены
+    // Додаємо URL файлів, якщо вони вже завантажені
     if (formData.fileUrls && formData.fileUrls.length > 0) {
       data.append('fileUrls', JSON.stringify(formData.fileUrls));
     }
-    // Или добавляем файлы, если они еще не были загружены
+    // Або додаємо файли, якщо вони ще не були завантажені
     else if (formData.files && formData.files.length > 0) {
       formData.files.forEach(file => {
         data.append('files', file);
@@ -350,7 +343,7 @@ const MapView = () => {
       'bg-teal-100 text-teal-800 border-teal-300',
     ];
 
-    // Выбираем цвет на основе первого символа тега
+    // Вибираємо колір на основі першого символу тега
     const index = tag.charCodeAt(0) % colors.length;
     return colors[index];
   };
@@ -427,7 +420,6 @@ const MapView = () => {
       text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200
       transition duration-200 text-sm sm:text-base"
                       placeholder="Уведіть мітку"
-                      required
                     />
                     <button
                       type="button"
@@ -500,7 +492,6 @@ const MapView = () => {
                   </div>
                 </div>
               </div>
-
               <div className="pt-1">
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -520,8 +511,8 @@ const MapView = () => {
                 </label>
               </div>
 
-              {/* Загрузка файла с улучшенным превью */}
-              {/* Input для загрузки файлов */}
+              {/*Input для завантаження файлів*/}
+
               <div className="pt-1">
                 <label className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5">
                   ЗОБРАЖЕННЯ/ВІДЕО
@@ -537,7 +528,7 @@ const MapView = () => {
                   multiple
                 />
 
-                {/* Заменяем label на div с drag-and-drop функциональностью */}
+                {/* Замінюємо label на div з drag-and-drop функціональністю */}
                 <div
                   className={`border-2 border-dashed rounded-xl transition-all ${
                     isDragging
@@ -611,7 +602,7 @@ const MapView = () => {
                   </label>
                 </div>
 
-                {/* Индикаторы загрузки для каждого файла */}
+                {/* Індикатори завантаження для кожного файлу */}
                 {formData.files.length > 0 && loading && (
                   <div className="mt-2 space-y-2">
                     {formData.files.map((file, index) => (
@@ -631,7 +622,7 @@ const MapView = () => {
                   </div>
                 )}
 
-                {/* Превью изображений в виде сетки */}
+                {/* попередній перегляд зображень у вигляді сітки */}
                 {imagePreviews.length > 0 && (
                   <div className="mt-4">
                     <div className="text-xs font-semibold uppercase text-gray-500 mb-1.5">
@@ -651,7 +642,7 @@ const MapView = () => {
                             />
                           </div>
 
-                          {/* Кнопка для удаления файла */}
+                          {/* Кнопка видалення файлу */}
                           <button
                             type="button"
                             onClick={() => handleRemoveFile(item.id)}
