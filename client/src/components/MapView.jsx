@@ -1,15 +1,50 @@
 import axios from 'axios';
 import L from 'leaflet';
 import React, { useEffect, useRef, useState } from 'react';
-import { FaMap, FaSatellite } from 'react-icons/fa';
-import { GiCompass } from 'react-icons/gi';
+import CreatableSelect from 'react-select/creatable';
+
 import 'leaflet/dist/leaflet.css';
+import AuthMenu from './map/AuthMenu.jsx';
+import LayersSwitcher from './map/LayersSwitcher';
+import WeatherWidget from './map/WeatherWidget';
+
+const initialOptions = [
+  { value: 'Home', label: 'Житло' },
+  { value: 'Water', label: 'Вода' },
+  { value: 'Food', label: 'Їжа' },
+  { value: 'Places', label: 'Місця' },
+];
 
 const MapView = () => {
   const [uploadProgress, setUploadProgress] = useState({}); // Об'єкт для збереження прогресу завантаження кожного файлу
   const [imagePreviews, setImagePreviews] = useState([]); // Массив превью
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [options, setOptions] = useState(initialOptions);
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  // Функция для обработки изменений категории
+  const handleChange = newValue => {
+    setSelectedOption(newValue);
+    // Также обновляем данные формы
+    setFormData(prev => ({
+      ...prev,
+      category: newValue ? newValue.value : '',
+    }));
+  };
+
+  const handleCreate = inputValue => {
+    console.log('Creating new option:', inputValue);
+    const newOption = { label: inputValue, value: inputValue.toLowerCase() };
+    setOptions(prev => {
+      console.log('Previous options:', prev);
+      const newOptions = [...prev, newOption];
+      console.log('New options:', newOptions);
+      return newOptions;
+    });
+    setSelectedOption(newOption);
+    console.log('New option created:', newOption);
+  };
 
   const mapRef = useRef(null);
   const [mapType, setMapType] = useState('standard');
@@ -21,6 +56,7 @@ const MapView = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
+    category: '',
     tags: [],
     files: [],
     fileUrls: [],
@@ -70,23 +106,9 @@ const MapView = () => {
     }
 
     // Додаємо маркери на карту
-    markers.forEach((marker, index) => {
-      const markerIcon = L.divIcon({
-        html: `<div style="background-color: #${index === 0 ? '3CB043' : index === markers.length - 1 ? 'E3242B' : '1E90FF'};
-                  width: 24px; height: 24px; border-radius: 12px; border: 2px solid white;
-                  display: flex; justify-content: center; align-items: center; color: white; font-weight: bold;
-                  text-align: center; line-height: 24px;">
-                 ${index + 1}
-               </div>`,
-        className: 'custom-marker',
-        iconSize: [24, 24],
-        iconAnchor: [12, 12],
-        popupAnchor: [0, -12],
-      });
-
-      const markerInstance = L.marker([marker.lat, marker.lng], { icon: markerIcon })
+    markers.forEach(marker => {
+      L.marker([marker.lat, marker.lng])
         .addTo(map)
-        .bindPopup(marker.title || `Точка ${index + 1}`)
         .on('click', () => {
           setSelectedMarker(marker);
           setModalOpen(true);
@@ -392,6 +414,58 @@ const MapView = () => {
                     required
                   />
                 </div>
+                <span className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5 group-focus-within:text-blue-600 transition duration-200">
+                  Категорія
+                </span>
+                <CreatableSelect
+                  className="mb-5"
+                  isClearable
+                  onChange={handleChange}
+                  onCreateOption={handleCreate}
+                  options={options}
+                  value={selectedOption}
+                  placeholder="Виберіть або створіть категорію"
+                  formatCreateLabel={inputValue => (
+                    <div className="flex items-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                        />
+                      </svg>
+                      Створити категорію `{inputValue}`
+                    </div>
+                  )}
+                />
+
+                {/*<div className="group mb-5">
+                  <label
+                    htmlFor="category"
+                    className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5 group-focus-within:text-blue-600 transition duration-200"
+                  >
+                    Категорія
+                  </label>
+                  <input
+                    type="text"
+                    id="category"
+                    name="title"
+                    value={formData.category}
+                    onChange={handleFormChange}
+                    className="w-full px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl
+                      text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200
+                      transition duration-200 text-sm sm:text-base"
+                    placeholder="Введіть назву категорії"
+                    required
+                  />
+                </div>*/}
                 <div className="group">
                   <label
                     htmlFor="tags"
@@ -409,22 +483,28 @@ const MapView = () => {
                       onKeyDown={e => {
                         if (e.key === 'Enter' && tagInput.trim()) {
                           e.preventDefault();
-                          setFormData(prev => ({
-                            ...prev,
-                            tags: [...prev.tags, tagInput.trim()],
-                          }));
-                          setTagInput('');
+                          // Проверяем, выбрана ли категория
+                          if (selectedOption) {
+                            setFormData(prev => ({
+                              ...prev,
+                              tags: [...prev.tags, tagInput.trim()],
+                            }));
+                            setTagInput('');
+                          }
                         }
                       }}
-                      className="flex-grow px-4 py-2.5 bg-white border-2 border-gray-200 rounded-l-xl
+                      className={`flex-grow px-4 py-2.5 bg-white border-2 ${
+                        !selectedOption ? 'border-gray-300 opacity-60' : 'border-gray-200'
+                      } rounded-l-xl
       text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200
-      transition duration-200 text-sm sm:text-base"
-                      placeholder="Уведіть мітку"
+      transition duration-200 text-sm sm:text-base`}
+                      placeholder={selectedOption ? 'Уведіть мітку' : 'Спочатку виберіть категорію'}
+                      disabled={!selectedOption}
                     />
                     <button
                       type="button"
                       onClick={() => {
-                        if (tagInput.trim()) {
+                        if (tagInput.trim() && selectedOption) {
                           setFormData(prev => ({
                             ...prev,
                             tags: [...prev.tags, tagInput.trim()],
@@ -432,7 +512,12 @@ const MapView = () => {
                           setTagInput('');
                         }
                       }}
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-r-xl transition duration-200 flex items-center justify-center"
+                      className={`${
+                        selectedOption
+                          ? 'bg-blue-600 hover:bg-blue-700'
+                          : 'bg-gray-400 cursor-not-allowed'
+                      } text-white font-medium py-2.5 px-4 rounded-r-xl transition duration-200 flex items-center justify-center`}
+                      disabled={!selectedOption}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -450,7 +535,9 @@ const MapView = () => {
                   </div>
 
                   <p className="text-xs text-gray-500 mt-1">
-                    Натисніть Enter або кнопку, щоб додати мітку
+                    {selectedOption
+                      ? 'Натисніть Enter або кнопку, щоб додати мітку'
+                      : 'Спочатку виберіть або створіть категорію щоб додати мітки'}
                   </p>
 
                   <div className="flex flex-wrap gap-2 mt-3">
@@ -470,8 +557,8 @@ const MapView = () => {
                                 }));
                               }}
                               className="ml-1.5 text-gray-500 hover:text-red-600 transition-colors w-5 h-5 rounded-full
-  flex items-center justify-center bg-white bg-opacity-80 hover:bg-opacity-100
-  shadow-sm border border-gray-200 hover:border-red-300"
+                flex items-center justify-center bg-white bg-opacity-80 hover:bg-opacity-100
+                shadow-sm border border-gray-200 hover:border-red-300"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -729,33 +816,10 @@ const MapView = () => {
         </div>
       )}
 
-      <div className="absolute top-4 right-4 flex flex-col space-y-2 z-10" style={{ zIndex: 1000 }}>
-        <button
-          onClick={() => setMapType('standard')}
-          className={`flex items-center gap-2 px-4 py-2 rounded transition-all duration-300
-  ${mapType === 'standard' ? 'bg-blue-600 text-white transform scale-105' : 'bg-gray-400 text-gray-900 hover:bg-gray-500'}`}
-        >
-          <FaMap className="text-xl" />
-          Стандартна
-        </button>
-
-        <button
-          onClick={() => setMapType('satellite')}
-          className={`flex items-center gap-2 px-4 py-2 rounded transition-all duration-300
-  ${mapType === 'satellite' ? 'bg-orange-500 text-white transform scale-105' : 'bg-gray-400 text-gray-900 hover:bg-gray-500'}`}
-        >
-          <FaSatellite className="text-xl" />
-          Супутникова
-        </button>
-
-        <button
-          onClick={() => setMapType('topographic')}
-          className={`flex items-center gap-2 px-4 py-2 rounded transition-all duration-300
-  ${mapType === 'topographic' ? 'bg-green-500 text-white transform scale-105' : 'bg-gray-400 text-gray-900 hover:bg-gray-500'}`}
-        >
-          <GiCompass className="text-xl" />
-          Топографічна
-        </button>
+      <div className="absolute top-4 right-4 flex gap-3 z-10" style={{ zIndex: 1000 }}>
+        <AuthMenu />
+        <LayersSwitcher mapType={mapType} setMapType={setMapType} />
+        <WeatherWidget />
       </div>
     </div>
   );

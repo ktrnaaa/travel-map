@@ -1,8 +1,8 @@
 // components/support/SupportModalWrapper.js
 import { useState } from 'react';
 
+import ContactSupport from './ContactSupport'; // Обновленный импорт
 import useTheme from './hooks/useTheme';
-import SupportButton from './supportButton';
 import SupportModal from './supportModal';
 
 export default function SupportModalWrapper() {
@@ -13,9 +13,11 @@ export default function SupportModalWrapper() {
     setShowSupport(prev => !prev);
   };
 
+  const telegramLink = 'https://t.me/your_support_account'; // Замените на вашу ссылку
+
   return (
     <>
-      <SupportButton onClick={toggleSupportModal} />
+      <ContactSupport onOpenForm={toggleSupportModal} telegramLink={telegramLink} />
 
       {showSupport && (
         <SupportModal onClose={toggleSupportModal} toggleTheme={toggleTheme} currentTheme={theme} />

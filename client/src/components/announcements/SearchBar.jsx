@@ -14,7 +14,7 @@ export default function SearchBar() {
           hover:bg-indigo-50 dark:hover:bg-gray-700 active:bg-indigo-100 dark:active:bg-gray-600 transition-colors duration-200
           flex items-center gap-2 border-2 border-indigo-500 dark:border-indigo-400 font-medium"
       >
-        Оголошення
+        Пропозиції
       </button>
 
       {/* Панель пошуку */}
