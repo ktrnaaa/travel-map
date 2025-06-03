@@ -1,14 +1,11 @@
 import path from 'path';
-// Цей рядок імпортує функцію fileURLToPath із модуля url, вбудованого в Node.js.
 import { fileURLToPath } from 'url';
 
-// Логи для консолі за запитами
-// Обробка та відображення помилок
-// Імпорт CORS
 import cors from 'cors';
 import express from 'express';
 import createHttpError from 'http-errors';
 import morgan from 'morgan';
+
 
 // Роути
 import announcementsRouter from "./routes/annoucementsAdding.js";
@@ -16,48 +13,36 @@ import getReportsRouter from './routes/main.js';
 import supportRouter from './routes/support.js';
 
 const app = express();
-app.use(morgan('combined'));
 
-app.use(
-  cors({
-    origin: '*',
-    methods: ['GET', 'POST'],
-    credentials: true,
-  })
-);
+// Middleware
+app.use(morgan('combined'));
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST'],
+  credentials: true,
+}));
 app.use(express.json());
 
-// import.meta.url це спеціальна змінна ESM, яка містить URL поточного модуля (файлу).
-// fileURLToPath(import.meta.url) - конвертує цей URL в шлях файлової системи.
-// В результаті __filename буде містити повний шлях до поточного файлу (де знаходиться цей код). Це аналог старої змінної __filename в CommonJS.
+// Шляхи до статичних файлів
 const __filename = fileURLToPath(import.meta.url);
-
-// path.dirname(__filename) отримує директорію, в якій знаходиться файл, з повного шляху __filename
 const __dirname = path.dirname(__filename);
-
 app.use(express.static(path.join(__dirname, '../client')));
 
 // Підключення роутів тут
 app.use('/', announcementsRouter);
 app.use('/', supportRouter);
 app.use('/', getReportsRouter);
-/*app.use('/', mainRouter);*/
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/index.html'));
-});
-
+// Обробка 404
 app.use((req, res, next) => {
   next(createHttpError(404));
 });
 
-// error hendler - midleware для обробки помилок. Тобто спочатку вище формуємо помилку, а потім всі помилки передаються сюди
-app.use((err, req, res) => {
-  const { status = 404, message = 'Internal Server Error' } = err; // Беремо статус помилки
-  console.error(status);
-  console.error(message);
-
-  res.status(status).json({ error: message }); // Повертаємо повідомлення про помилку в форматі JSON
+// Обробник помилок
+app.use((err, req, res, next) => {
+  const { status = 500, message = 'Internal Server Error' } = err;
+  console.error(status, message);
+  res.status(status).json({ error: message });
 });
 
 export default app;
