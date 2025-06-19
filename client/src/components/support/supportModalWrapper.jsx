@@ -13,7 +13,7 @@ export default function SupportModalWrapper() {
     setShowSupport(prev => !prev);
   };
 
-  const telegramLink = 'https://t.me/your_support_account'; // Замените на вашу ссылку
+  const telegramLink = 'https://t.me/TM44GRAMMYBOT'; // Замените на вашу ссылку
 
   return (
     <>

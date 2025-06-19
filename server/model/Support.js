@@ -1,15 +1,18 @@
 import { Schema, model } from 'mongoose';
 
 const supportSchema = new Schema({
-  name: String,
-  email: String,
-  subject: String,
-  message: String,
-  date: {
-    type: Date,
-    default: Date.now,
+  userId: { type: Number, required: true },  // Додано ID користувача з Telegram
+  username: String,                         // Юзернейм 
+  name: String,                             // Ім'я користувача
+  email: String,                            // Email 
+  subject: { type: String, required: true },// Тема повідомлення
+  message: { type: String, required: true },// Текст скарги/питання
+  date: { type: Date, default: Date.now },  // Дата створення
+  status: {                                 // Статус обробки
+    type: String,
+    default: 'pending',                     // pending / resolved
+    enum: ['pending', 'resolved'],          // Обмеження значень
   },
-});
+}, { collection: 'user-report' });          // Явно вказуємо колекцію
 
-const Support = model('support_messages', supportSchema, 'user-report');
-export default Support;
+export default model('Support', supportSchema);
