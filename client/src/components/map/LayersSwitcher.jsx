@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState, useRef, useEffect } from 'react';
 import { FaMap, FaSatellite, FaLayerGroup } from 'react-icons/fa';
 import { GiCompass } from 'react-icons/gi';
@@ -32,45 +33,53 @@ const LayersSwitcher = ({ mapType, setMapType }) => {
       </button>
 
       {/* Выпадающее меню при клике */}
-      {isOpen && (
-        <div className="absolute top-14 right-0 flex flex-col space-y-2 z-10">
-          <button
-            onClick={() => {
-              setMapType('standard');
-              setIsOpen(false);
-            }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-md transition-all duration-300
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+          >
+            <div className="absolute top-full right-0 mt-2 flex flex-col space-y-2 z-10">
+              <button
+                onClick={() => {
+                  setMapType('standard');
+                  setIsOpen(false);
+                }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-md transition-all duration-300
                       ${mapType === 'standard' ? 'bg-blue-600 text-white' : 'bg-white text-gray-900 hover:bg-gray-100'}`}
-          >
-            <FaMap className="text-xl" />
-            <span>Стандартная</span>
-          </button>
+              >
+                <FaMap className="text-xl" />
+                <span>Стандартна</span>
+              </button>
 
-          <button
-            onClick={() => {
-              setMapType('satellite');
-              setIsOpen(false);
-            }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-md transition-all duration-300
+              <button
+                onClick={() => {
+                  setMapType('satellite');
+                  setIsOpen(false);
+                }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-md transition-all duration-300
                       ${mapType === 'satellite' ? 'bg-orange-500 text-white' : 'bg-white text-gray-900 hover:bg-gray-100'}`}
-          >
-            <FaSatellite className="text-xl" />
-            <span>Спутниковая</span>
-          </button>
+              >
+                <FaSatellite className="text-xl" />
+                <span>Супутникова</span>
+              </button>
 
-          <button
-            onClick={() => {
-              setMapType('topographic');
-              setIsOpen(false);
-            }}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-md transition-all duration-300
+              <button
+                onClick={() => {
+                  setMapType('topographic');
+                  setIsOpen(false);
+                }}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg shadow-md transition-all duration-300
                       ${mapType === 'topographic' ? 'bg-green-500 text-white' : 'bg-white text-gray-900 hover:bg-gray-100'}`}
-          >
-            <GiCompass className="text-xl" />
-            <span>Топографическая</span>
-          </button>
-        </div>
-      )}
+              >
+                <GiCompass className="text-xl" />
+                <span>Топографічна</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

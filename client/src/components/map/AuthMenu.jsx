@@ -1,3 +1,4 @@
+import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState, useRef, useEffect } from 'react';
 import { FaUser, FaSignInAlt, FaUserPlus } from 'react-icons/fa';
 
@@ -43,29 +44,37 @@ const AuthMenu = () => {
       </button>
 
       {/* Выпадающее меню при клике */}
-      {isOpen && (
-        <div className="absolute top-14 right-0 bg-white rounded-lg shadow-xl py-2 min-w-[200px] z-10">
-          <div className="px-4 py-2 border-b border-gray-100">
-            <h3 className="text-sm font-semibold text-gray-700">Приватний кабінет</h3>
-          </div>
-
-          <button
-            onClick={handleLogin}
-            className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
           >
-            <FaSignInAlt className="text-indigo-600" />
-            <span>Авторизація</span>
-          </button>
+            <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl py-2 min-w-[200px] z-10">
+              <div className="px-4 py-2 border-b border-gray-100">
+                <h3 className="text-sm font-semibold text-gray-700">Приватний кабінет</h3>
+              </div>
 
-          <button
-            onClick={handleRegister}
-            className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
-          >
-            <FaUserPlus className="text-green-600" />
-            <span>Реєстрація</span>
-          </button>
-        </div>
-      )}
+              <button
+                onClick={handleLogin}
+                className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+              >
+                <FaSignInAlt className="text-indigo-600" />
+                <span>Авторизація</span>
+              </button>
+
+              <button
+                onClick={handleRegister}
+                className="flex items-center gap-2 w-full text-left px-4 py-2 hover:bg-gray-100 transition-colors"
+              >
+                <FaUserPlus className="text-green-600" />
+                <span>Реєстрація</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

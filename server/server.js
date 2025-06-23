@@ -6,23 +6,23 @@ import express from 'express';
 import createHttpError from 'http-errors';
 import morgan from 'morgan';
 
-
 // Роути
-import announcementsRouter from "./routes/annoucementsAdding.js";
+import announcementsRouter from './routes/annoucementsAdding.js';
 import getReportsRouter from './routes/main.js';
-import supportRouter from './routes/support.js';
+import marker from './routes/markerRouter.js';
 import profileEdditRouter from './routes/profileChanges.js';
-
-
+import supportRouter from './routes/support.js';
 const app = express();
 
 // Middleware
 app.use(morgan('combined'));
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST'],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Шляхи до статичних файлів
@@ -35,7 +35,7 @@ app.use('/', announcementsRouter);
 app.use('/', supportRouter);
 app.use('/', getReportsRouter);
 app.use('/', profileEdditRouter);
-
+app.use('/', marker);
 
 // Обробка 404
 app.use((req, res, next) => {

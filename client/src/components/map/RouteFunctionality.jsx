@@ -1,29 +1,8 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState, useRef, useEffect } from 'react';
-import { BsThermometerHalf, BsCloudRain } from 'react-icons/bs';
-import { FaTimes } from 'react-icons/fa';
-import { FaCloudSunRain, FaUmbrella, FaCloudRain } from 'react-icons/fa';
-import { GiWhirlwind, GiHeavyRain, GiRaining } from 'react-icons/gi';
-import { IoPartlySunny, IoCloudyNight } from 'react-icons/io5';
-import { RiWindyLine } from 'react-icons/ri';
-import { TiWeatherPartlySunny, TiWeatherStormy } from 'react-icons/ti';
-import {
-  WiDaySunny,
-  WiDayCloudy,
-  WiRain,
-  WiSnow,
-  WiThunderstorm,
-  WiBarometer,
-  WiDayCloudyGusts,
-  WiCloudRefresh,
-  WiStormWarning,
-  WiDayRainMix,
-  WiWindy,
-  WiHumidity,
-  WiThermometer,
-} from 'react-icons/wi';
+import { FaRoute } from 'react-icons/fa';
 
-export default function WeatherWidget() {
+export default function RouteFunctionality() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
@@ -55,7 +34,7 @@ export default function WeatherWidget() {
                  hover:bg-gray-100 active:bg-gray-200 transition-colors duration-200 border border-gray-200"
         title="Погода"
       >
-        <FaCloudRain className="text-3xl" />
+        <FaRoute className="text-3xl" />
       </button>
 
       <AnimatePresence>

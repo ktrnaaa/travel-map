@@ -25,7 +25,6 @@ function App() {
           <MapView />
           <SupportModalWrapper />
           <Announcements />
-          <SearchBar />
         </>
       )}
 

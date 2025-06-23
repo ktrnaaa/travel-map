@@ -1,18 +1,18 @@
 import React from 'react';
 import { FaBullhorn } from 'react-icons/fa';
 
-function ActionButton({ onClick }) {
+function AnnouncementButton({ onClick }) {
   return (
     <button
-      className="fixed bottom-10 left-5 z-[1000] px-4 py-2 bg-white dark:bg-gray-800 text-indigo-700 dark:text-indigo-300 rounded-md shadow-lg
-          hover:bg-indigo-50 dark:hover:bg-gray-700 active:bg-indigo-100 dark:active:bg-gray-600 transition-colors duration-200 
-          flex items-center gap-2 border-2 border-indigo-500 dark:border-indigo-400 font-medium"
+      className="fixed bottom-8 left-5 z-[1000] p-3 bg-white text-gray-700 rounded-full shadow-md
+                 hover:bg-gray-100 active:bg-gray-200 transition-colors duration-200 border border-gray-200
+                 flex items-center justify-center"
       onClick={onClick}
+      title="Створити оголошення"
     >
-      <FaBullhorn className="text-xl" />
-      Створити
+      <FaBullhorn className="text-3xl" />
     </button>
   );
 }
 
-export default ActionButton;
+export default AnnouncementButton;
