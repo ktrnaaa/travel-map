@@ -1,38 +1,28 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import Announcements from './components/announcements/announcementModalWrapper';
 import SearchBar from './components/announcements/SearchBar';
 import MapView from './components/MapView';
 import SidebarLayout from './components/sidebarLayout/sidebarLayout';
 import SupportModalWrapper from './components/support/supportModalWrapper';
+import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/profilePage';
 
 function App() {
-  const location = useLocation();
-
-  const inDashboard =
-    location.pathname.startsWith('/profile') ||
-    location.pathname.startsWith('/settings') ||
-    location.pathname.startsWith('/announcements') ||
-    location.pathname.startsWith('/support') ||
-    location.pathname.startsWith('/routes');
-
   return (
     <div className="min-h-screen dark:bg-gray-900 bg-gray-50 relative">
-      {!inDashboard && (
-        <>
-          <MapView />
-          <SupportModalWrapper />
-          <Announcements />
-        </>
-      )}
-
       <Routes>
-        {/* Главная страница с MapView и UI-элементами */}
-        <Route path="/" element={<div />} />
-
-        {/* Личный кабинет */}
+        <Route
+          path="/"
+          element={
+            <>
+              <MapView />
+              <SupportModalWrapper />
+              {/*<Announcements />*/}
+            </>
+          }
+        />
         <Route
           path="/profile"
           element={
@@ -73,9 +63,7 @@ function App() {
             </SidebarLayout>
           }
         />
-
-        {/* Пример авторизации */}
-        <Route path="/login" element={<div>Логін</div>} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </div>
   );

@@ -5,6 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import CreatableSelect from 'react-select/creatable';
 
 import 'leaflet/dist/leaflet.css';
+import AuthMenu from './map/AuthMenu.jsx';
 import LayersSwitcher from './map/LayersSwitcher';
 import RouteFunctionality from './map/RouteFunctionality.jsx';
 import SidePanel from './map/SidePanel.jsx';
@@ -979,6 +980,7 @@ const MapView = () => {
       />
 
       <div className="absolute top-4 right-4 flex gap-3 z-10" style={{ zIndex: 1000 }}>
+        <AuthMenu />
         <LayersSwitcher mapType={mapType} setMapType={setMapType} />
         <WeatherWidget />
         <RouteFunctionality />
