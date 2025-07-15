@@ -6,7 +6,7 @@ import SearchBar from './components/announcements/SearchBar';
 import MapView from './components/MapView';
 import SidebarLayout from './components/sidebarLayout/sidebarLayout';
 import SupportModalWrapper from './components/support/supportModalWrapper';
-import LoginPage from './pages/LoginPage';
+import LoginPage from './pages/login/LoginPage';
 import ProfilePage from './pages/profilePage';
 
 function App() {
