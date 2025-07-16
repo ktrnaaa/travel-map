@@ -39,10 +39,10 @@ git branch -D назва старої гілки
 1.3. Створити гілку із задачею JIRA ОБОВ'ЯЗКОВО!!!:
 
 ```bash
-git checkout -b PROJ-123-short-description
+git checkout -b TM-999/short-description
 ```
 
-> `PROJ-123` — це ід задачі в Jira (Ключ)
+> `TM-999` — це ід задачі в Jira (Ключ)
 
 ---
 
@@ -51,14 +51,14 @@ git checkout -b PROJ-123-short-description
 2.1. Коміти оформлювати за схемою:
 
 ```bash
-PROJ-123: Короткий опис змін
+TM-999: Короткий опис змін
 ```
 
 2.2. Приклад:
 
 ```bash
 git add .
-git commit -m "PROJ-123: Додано форму логіну"
+git commit -m "TM-999: Додано форму логіну"
 ```
 
 ---
@@ -68,7 +68,7 @@ git commit -m "PROJ-123: Додано форму логіну"
 3.1. Надіслати СВОЮ СТВОРЕНУ гілку на сервер:
 
 ```bash
-git push origin PROJ-123-short-description
+git push origin "назва-гілки"
 ```
 
 3.2. Створити Pull Request з цієї гілки в `main` (вже на самому сайті GitHub):
@@ -94,12 +94,12 @@ git pull origin main
 
 5.1. Сервер:
 
-- GitHub пропонує видалити після merge
+- GitHub пропонує видалити після merge (Пункт для Team Lead!)
 
   5.2. Локально:
 
 ```bash
-git branch -d feature/PROJ-123-short-description
+git branch -d "назва гілки"
 ```
 
 ---

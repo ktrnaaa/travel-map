@@ -13,20 +13,22 @@ const LoginPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#F4EFFF] to-[#744ce9]/10">
       <form
         className="bg-white p-10 rounded-xl shadow-md w-full max-w-md transition-all duration-300"
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={e => e.preventDefault()}
       >
         <h2 className="text-3xl font-bold mb-8 text-center text-[#744ce9] drop-shadow">
           {isRegister ? 'Реєстрація' : 'Вхід'}
         </h2>
 
-        <div className="relative mb-5">
-          <FaUser className="absolute left-3 top-4 text-[#744ce9]" />
-          <input
-            type="text"
-            placeholder="Логін"
-            className="w-full pl-10 pr-3 py-3 border border-indigo-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#744ce9] transition-all"
-          />
-        </div>
+        {isRegister && (
+          <div className="relative mb-5">
+            <FaUser className="absolute left-3 top-4 text-[#744ce9]" />
+            <input
+              type="text"
+              placeholder="Логін"
+              className="w-full pl-10 pr-3 py-3 border border-indigo-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#744ce9] transition-all"
+            />
+          </div>
+        )}
 
         <div className="relative mb-5">
           <FaUser className="absolute left-3 top-4 text-[#744ce9]" />

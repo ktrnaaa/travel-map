@@ -723,7 +723,13 @@ const MapView = () => {
                   <input
                     type="checkbox"
                     name="Private"
-                    onChange={handleFormChange}
+                    checked={!!formData.Private}
+                    onChange={e =>
+                      setFormData(prev => ({
+                        ...prev,
+                        Private: e.target.checked,
+                      }))
+                    }
                     className="sr-only peer"
                   />
                   <div
