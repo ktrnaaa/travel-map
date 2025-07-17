@@ -228,6 +228,7 @@ const MapView = () => {
 
   // Обробник кліка по карті
   const handleMapClick = e => {
+    if (modalOpen) return;
     const { lat, lng } = e.latlng;
     const newMarker = {
       lat,
@@ -585,27 +586,9 @@ const MapView = () => {
                   )}
                 />
 
-                {/*<div className="group mb-5">
-                  <label
-                    htmlFor="category"
-                    className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5 group-focus-within:text-blue-600 transition duration-200"
-                  >
-                    Категорія
-                  </label>
-                  <input
-                    type="text"
-                    id="category"
-                    name="title"
-                    value={formData.category}
-                    onChange={handleFormChange}
-                    className="w-full px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl
-                      text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200
-                      transition duration-200 text-sm sm:text-base"
-                    placeholder="Введіть назву категорії"
-                    required
-                  />
-                </div>*/}
-                <div className="group">
+                {
+                  // TODO:Тимчасово вимкнув функціонал створення міток
+                  /*<div className="group">
                   <label
                     htmlFor="tags"
                     className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5 group-focus-within:text-blue-600 transition duration-200"
@@ -716,7 +699,8 @@ const MapView = () => {
                         ))
                       : null}
                   </div>
-                </div>
+                </div>*/
+                }
               </div>
               <div className="pt-1">
                 <label className="relative inline-flex items-center cursor-pointer">
