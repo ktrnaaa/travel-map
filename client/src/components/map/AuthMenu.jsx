@@ -1,10 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState, useRef, useEffect } from 'react';
 import { FaUser, FaSignInAlt, FaUserPlus } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const AuthMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
+  const navigate = useNavigate();
 
   // Обработчик клика вне компонента для закрытия меню
   useEffect(() => {
@@ -38,7 +40,7 @@ const AuthMenu = () => {
       <button
         className="flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-lg
                   hover:bg-gray-100 transition-all duration-300 z-20 relative"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => navigate('/login')}
       >
         <FaUser className="text-2xl text-gray-700" />
       </button>

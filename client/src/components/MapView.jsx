@@ -3,6 +3,7 @@ import L from 'leaflet';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import CreatableSelect from 'react-select/creatable';
+import { components } from 'react-select';
 
 import 'leaflet/dist/leaflet.css';
 import AuthMenu from './map/AuthMenu.jsx';
@@ -11,19 +12,12 @@ import RouteFunctionality from './map/RouteFunctionality.jsx';
 import SidePanel from './map/SidePanel.jsx';
 import WeatherWidget from './map/WeatherWidget';
 
-const initialOptions = [
-  { value: 'Home', label: 'Житло' },
-  { value: 'Water', label: 'Вода' },
-  { value: 'Food', label: 'Їжа' },
-  { value: 'Places', label: 'Місця' },
-];
-
 const MapView = () => {
   const [uploadProgress, setUploadProgress] = useState({}); // Об'єкт для збереження прогресу завантаження кожного файлу
   const [imagePreviews, setImagePreviews] = useState([]); // Массив превью
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [options, setOptions] = useState(initialOptions);
+  const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   // Стейт для модального вікна і даних маркерів
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,7 +45,6 @@ const MapView = () => {
     const fetchMarkers = async () => {
       try {
         const response = await axios.get('http://localhost:4000/markers');
-        console.log('Загруженные маркеры с сервера:', response.data); // Отладка
 
         // Обрабатываем данные с сервера, чтобы они соответствовали нужному формату
         const processedMarkers = response.data.map(marker => ({
@@ -90,6 +83,43 @@ const MapView = () => {
     });
     setSelectedOption(newOption);
     console.log('New option created:', newOption);
+  };
+
+  const OptionWithDelete = props => {
+    if (props.data.__isNew__) {
+      return <components.Option {...props}>{props.children}</components.Option>;
+    }
+    return (
+      <components.Option {...props}>
+        <div className="flex justify-between items-center w-full">
+          <span>{props.data.label}</span>
+          <button
+            type="button"
+            onClick={e => {
+              e.stopPropagation();
+              setOptions(prev => prev.filter(opt => opt.value !== props.data.value));
+              if (selectedOption && selectedOption.value === props.data.value) {
+                setSelectedOption(null);
+                setFormData(prev => ({ ...prev, category: '' }));
+              }
+            }}
+            className="ml-2 w-4 h-4 flex items-center justify-center rounded-full bg-red-100 hover:bg-red-200 text-red-500 hover:text-red-700 transition-colors duration-150 shadow-sm cursor-pointer"
+            title="Удалить категорию"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </components.Option>
+    );
   };
 
   // Функция для удаления маркера
@@ -176,12 +206,9 @@ const MapView = () => {
 
     // Додаємо маркери на карту
     markers.forEach(marker => {
-      console.log('Добавляем маркер на карту:', marker); // Отладка
-
       L.marker([marker.lat, marker.lng])
         .addTo(map)
         .on('click', () => {
-          console.log('Клик по маркеру, передаем данные:', marker); // Отладка
           setSelectedMarkerForPanel(marker);
           setSidePanelOpen(true);
         });
@@ -490,7 +517,7 @@ const MapView = () => {
     }
   };
 
-  const getTagColor = tag => {
+  /*const getTagColor = tag => {
     const colors = [
       'bg-blue-100 text-blue-800 border-blue-300',
       'bg-green-100 text-green-800 border-green-300',
@@ -505,6 +532,34 @@ const MapView = () => {
     // Вибираємо колір на основі першого символу тега
     const index = tag.charCodeAt(0) % colors.length;
     return colors[index];
+  };*/
+
+  const customStyles = {
+    control: (provided, state) => ({
+      ...provided,
+      outline: 'none',
+      borderColor: state.isFocused ? '#3b82f6' : '#e5e7eb', // focus:border-blue-500
+      boxShadow: state.isFocused ? '0 0 0 1px #bfdbfe' : 'none', // focus:ring-blue-200
+      backgroundColor: 'white',
+      borderWidth: 2,
+      borderRadius: 12,
+      minHeight: 44,
+      paddingLeft: 16,
+      paddingRight: 16,
+      fontSize: 16,
+      color: '#1f2937', // text-gray-800
+      transition: 'border-color 0.2s, box-shadow 0.2s',
+    }),
+    placeholder: provided => ({
+      ...provided,
+      color: '#9ca3af', // placeholder-gray-400
+      fontSize: 16,
+    }),
+    singleValue: provided => ({
+      ...provided,
+      color: '#1f2937', // text-gray-800
+      fontSize: 16,
+    }),
   };
 
   return (
@@ -548,16 +603,17 @@ const MapView = () => {
                     value={formData.title}
                     onChange={handleFormChange}
                     className="w-full px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl
-                      text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200
-                      transition duration-200 text-sm sm:text-base"
+    text-gray-800 placeholder-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-200
+    focus:outline-none hover:border-[#9ca3af] transition duration-200 text-sm sm:text-base"
                     placeholder="Введіть назву маркера"
                     required
                   />
                 </div>
-                <span className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5 group-focus-within:text-blue-600 transition duration-200">
+                <span className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5">
                   Категорія
                 </span>
                 <CreatableSelect
+                  styles={customStyles}
                   className="mb-3"
                   isClearable
                   onChange={handleChange}
@@ -584,6 +640,7 @@ const MapView = () => {
                       Створити категорію `{inputValue}`
                     </div>
                   )}
+                  components={{ Option: OptionWithDelete }}
                 />
 
                 {
