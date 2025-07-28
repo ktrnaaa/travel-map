@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { FaGoogle, FaUser, FaLock } from 'react-icons/fa';
+import { FaGoogle, FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+
 import LoginTelegramButton from './TelegramLoginButton';
 
 const LoginPage = () => {
   const [isRegister, setIsRegister] = useState(false);
   const [showReset, setShowReset] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleGoogleLogin = () => {
     // TODO: логика Google Login
@@ -50,11 +52,20 @@ const LoginPage = () => {
 
         <div className="relative mb-5">
           <FaLock className="absolute left-3 top-4 text-[#744ce9]" />
+
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Пароль"
             className="w-full pl-10 pr-3 py-3 border border-indigo-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#744ce9] transition-all"
           />
+          <button
+            type="button"
+            className="absolute right-3 top-4 text-[#744ce9] focus:outline-none"
+            onClick={() => setShowPassword(v => !v)}
+            tabIndex={-1}
+          >
+            {showPassword ? <FaEye /> : <FaEyeSlash />}
+          </button>
         </div>
 
         {isRegister && (
@@ -65,6 +76,14 @@ const LoginPage = () => {
               placeholder="Підтвердіть пароль"
               className="w-full pl-10 pr-3 py-3 border border-indigo-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#744ce9] transition-all"
             />
+            <button
+              type="button"
+              className="absolute right-3 top-4 text-[#744ce9] focus:outline-none"
+              onClick={() => setShowPassword(v => !v)}
+              tabIndex={-1}
+            >
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </button>
           </div>
         )}
 
