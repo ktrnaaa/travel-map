@@ -12,6 +12,7 @@ import getReportsRouter from './routes/main.js';
 import marker from './routes/markerRouter.js';
 import profileEdditRouter from './routes/profileChanges.js';
 import supportRouter from './routes/support.js';
+import authRouter from './routes/auth.js'
 const app = express();
 
 // Middleware
@@ -36,6 +37,7 @@ app.use('/', supportRouter);
 app.use('/', getReportsRouter);
 app.use('/', profileEdditRouter);
 app.use('/', marker);
+app.use('/api', authRouter);
 
 // Обробка 404
 app.use((req, res, next) => {

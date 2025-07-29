@@ -5,14 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon bin/www.js",
-    "start:bot": "nodemon bot/grammY.js"
+    "start:bot": "nodemon bot/grammY.js",
+    "start": "node bin/www.js"
   },
   "license": "MIT",
   "dependencies": {
     "@grammyjs/ratelimiter": "^1.2.1",
     "ajv": "^8.17.1",
-    "axios": "^1.9.0",
-    "bcrypt": "^5.1.1",
+    "axios": "^1.11.0",
+    "bcrypt": "^6.0.0",
     "cloudinary": "^2.6.1",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
@@ -23,6 +24,7 @@
     "google-auth-library": "^9.15.1",
     "grammy": "^1.36.3",
     "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
     "jws": "^4.0.0",
     "mongoose": "^8.14.2",
     "morgan": "^1.10.0",

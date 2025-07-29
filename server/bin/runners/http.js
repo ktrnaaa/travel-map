@@ -4,7 +4,7 @@ import server from '../../server.js';
 
 export default function startServer() {
   const httpServer = http.createServer(server);
-  const PORT = 4000;
+  const PORT = process.env.PORT;
 
   httpServer.listen(PORT, () => {
     console.log('==============================='.green);
