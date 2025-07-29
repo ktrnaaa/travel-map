@@ -5,17 +5,18 @@ import { FaBullhorn } from 'react-icons/fa';
 import { BiLogIn } from "react-icons/bi";
 import { Outlet, Link, NavLink } from 'react-router-dom';
 import { CgProfile } from "react-icons/cg";
-import { RiLogoutBoxLine } from "react-icons/ri"
-
 
 const SidebarLayout = ({ children }) => {
+  const baseLinkStyles = `
+    py-2 px-4 rounded-lg flex items-center transition-all duration-200 ease-in-out
+  `;
+
   const activeStyle = ({ isActive }) =>
-    isActive ? "bg-[#F4EFFF] text-[#744ce9] border-l-4 border-[#744ce9]" : "bg-none";
+    `${baseLinkStyles} ${isActive ? "bg-[#744ce9] text-white" : "text-[#797979] hover:bg-[#744CE9] hover:text-[#ffff]"}`;
 
   return (
     <div className="flex min-h-screen bg-[#F3F3F3]">
-      {/* Sidebar */}
-      <div className="fixed left-0 top-0 h-full w-64 bg-white p-6 flex flex-col border-r border-gray-200">
+      <div className="fixed left-0 top-0 h-full w-64 bg-white p-6 flex flex-col">
         <h1 className="text-2xl font-bold mb-8">Особистий кабінет</h1>
 
         <div className="mb-8">
@@ -24,14 +25,7 @@ const SidebarLayout = ({ children }) => {
         </div>
 
         <nav className="flex flex-col justify-between h-full">
-          {/* Верхні елементи меню */}
-          <div
-            className="space-y-4 text-[#797979]
-            [&>a]:py-2 [&>a]:px-4 [&>a]:rounded-lg
-            [&>a]:transition-all [&>a]:duration-200 [&>a]:ease-in-out
-            [&>a]:flex [&>a]:items-center
-            [&>a:hover]:bg-[#744ce9] [&>a:hover]:text-white"
-          >
+          <div className="space-y-4">
             <NavLink to="/profile" className={activeStyle}>
               <CgProfile size="27" className="mr-[5px]" /> Профіль
             </NavLink>
@@ -49,30 +43,20 @@ const SidebarLayout = ({ children }) => {
             </NavLink>
           </div>
 
-          {/* Нижні елементи меню */}
-          <div
-            className="space-y-4 text-[#797979]
-            [&>a]:py-2 [&>a]:px-4 [&>a]:rounded-lg
-            [&>a]:transition-all [&>a]:duration-200 [&>a]:ease-in-out
-            [&>a]:flex [&>a]:items-center
-            [&>a:not(:last-child):hover]:bg-[#744ce9] [&>a:not(:last-child):hover]:text-white"
-          >
+          <div className="space-y-4">
             <NavLink to="/settings" className={activeStyle}>
               <IoMdSettings size="25" className="mr-[5px]" /> Налаштування
-            </NavLink>
-            <NavLink to="/logout" className="text-[#F22F46] hover:bg-[#F22F46] hover:text-white rounded-lg flex items-center px-4 py-2">
-              <RiLogoutBoxLine size="25" className="mr-[5px]" /> Вихід
             </NavLink>
           </div>
         </nav>
       </div>
 
-      {/* Main Content Area */}
-      <div className="ml-64 flex-1 p-8 border-l border-gray-200 bg-white rounded-l-md shadow-sm">
+      <div className="ml-64 flex-1 p-8">
         {children}
       </div>
     </div>
   );
 };
+
 
 export default SidebarLayout;

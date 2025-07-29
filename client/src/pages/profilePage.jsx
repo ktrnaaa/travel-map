@@ -22,6 +22,8 @@ const ProfilePage = () => {
   const fileInputRef = useRef(null);
   const [focusedField, setFocusedField] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -90,32 +92,36 @@ const ProfilePage = () => {
     setDarkMode(!darkMode);
   };
 
+  const handleLogout = () => {
+    navigate("/logout");
+  };
+
+  
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 bg-white rounded-lg">
-      {/* Стилі для клавіатурної навігації */}
       <style jsx>{`
+        :focus:not(:focus-visible) {
+          outline: none;
+          box-shadow: none;
+        }
         :focus-visible {
           outline: 2px solid #744ce9;
           outline-offset: 2px;
           border-radius: 0.375rem;
         }
-        button:focus:not(:focus-visible),
-        input:focus:not(:focus-visible),
-        [tabindex]:focus:not(:focus-visible) {
-          outline: none;
-        }
       `}</style>
 
-      {/* Топ-бар з насиченою тінню */}
-      <div
-        className="flex items-center justify-between bg-[#F4EFFF] rounded-xl px-4 py-2 mb-6 gap-4 border border-gray-300"
-        style={{ boxShadow: "0 6px 20px rgba(116, 76, 233, 0.5)" }}
-      >
+      {/* Топ-бар */}
+      <div className="flex items-center justify-between bg-[#F4EFFF] rounded-xl px-4 py-2 mb-6 gap-4 border border-gray-300 shadow-lg">
         <motion.button
           onClick={() => navigate("/")}
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ 
+            scale: 1.05,
+            backgroundColor: "#FFFFFF",
+            color: "#744ce9"
+          }}
           whileTap={{ scale: 0.95 }}
-          className="flex items-center gap-2 text-sm bg-[#744ce9] text-white px-4 py-2 rounded-md shadow hover:bg-[#5c3bc7] transition focus:outline-none"
+          className="flex items-center gap-2 text-sm bg-[#744ce9] text-white px-4 py-2 rounded-md shadow transition-all duration-50 cursor-pointer border-2 border-[#744ce9]"
         >
           <FiArrowLeft />
           Повернутись до карти
@@ -126,7 +132,7 @@ const ProfilePage = () => {
           <input
             type="text"
             placeholder="Пошук..."
-            className="bg-white text-sm text-gray-700 placeholder-gray-400 pl-10 pr-4 py-2 rounded-md w-full shadow-sm border border-transparent focus:outline-none"
+            className="bg-white text-sm text-gray-700 placeholder-gray-400 pl-10 pr-4 py-2 rounded-md w-full shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#744ce9] focus:border-transparent"
           />
         </div>
 
@@ -135,7 +141,7 @@ const ProfilePage = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={toggleDarkMode}
-            className="text-[#744ce9] text-xl p-2 rounded focus:outline-none"
+            className="text-[#744ce9] text-xl p-2 rounded cursor-pointer"
             title={darkMode ? "Світла тема" : "Темна тема"}
           >
             <FiMoon />
@@ -144,7 +150,7 @@ const ProfilePage = () => {
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="text-[#744ce9] text-xl p-2 relative rounded focus:outline-none"
+            className="text-[#744ce9] text-xl p-2 relative rounded cursor-pointer"
             title="Повідомлення"
           >
             <FiMessageCircle />
@@ -154,7 +160,7 @@ const ProfilePage = () => {
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            className="text-[#744ce9] text-xl p-2 relative rounded focus:outline-none"
+            className="text-[#744ce9] text-xl p-2 relative rounded cursor-pointer"
             title="Друзі"
           >
             <FiUsers />
@@ -163,25 +169,25 @@ const ProfilePage = () => {
 
           <p className="text-sm font-medium text-gray-700">Ім'я Прізвище</p>
           {avatarPreview ? (
-            <img src={avatarPreview} alt="avatar" className="w-8 h-8 rounded-full object-cover shadow" />
+            <img src={avatarPreview} alt="avatar" className="w-8 h-8 rounded-full object-cover shadow cursor-pointer" />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-[#744ce9] text-white flex items-center justify-center text-sm font-semibold shadow">ІП</div>
+            <div className="w-8 h-8 rounded-full bg-[#744ce9] text-white flex items-center justify-center text-sm font-semibold shadow cursor-pointer">ІП</div>
           )}
 
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={handleLogout}
+            className="text-[#744ce9] text-xl p-2 rounded cursor-pointer"
             title="Вихід"
-            className="text-[#744ce9] text-xl rounded focus:outline-none"
           >
             <FiLogOut />
-          </button>
+          </motion.button>
         </div>
       </div>
-
-      {/* Головний заголовок */}
+     
       <h1 className="text-3xl font-bold text-[#744ce9] mb-2">Ваш профіль</h1>
-      <h2 className="text-xl text-gray-600 mb-8">Керуйте своїми персональними даними</h2>
-
-      {/* Основна форма */}
+      
       <form onSubmit={handleSubmit}>
         <motion.div 
           initial={{ opacity: 0, y: 20 }} 
@@ -189,23 +195,20 @@ const ProfilePage = () => {
           transition={{ duration: 0.5 }} 
           className="grid grid-cols-3 gap-8"
         >
-          {/* Блок з фото з насиченою тінню */}
-          <div
-            className="col-span-1 flex flex-col items-center justify-start bg-[#F4EFFF] rounded-xl p-6"
-            style={{ boxShadow: "0 10px 30px rgba(116, 76, 233, 0.5)" }}
-          >
+          
+          <div className="col-span-1 flex flex-col items-center justify-start bg-[#F4EFFF] rounded-xl p-6 shadow-lg">
             <h3 className="text-xl font-semibold text-[#744ce9] mb-4 self-start">Фото профілю</h3>
-            <div className="relative group w-40 h-40 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-md">
+            <div className="relative group w-40 h-40 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-md cursor-pointer">
               {avatarPreview ? (
                 <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
                 <span className="text-[#744ce9] text-4xl font-semibold">ІП</span>
               )}
-              <div className="absolute inset-x-0 bottom-[-10%] h-2/5 bg-[#744ce966] opacity-0 group-hover:opacity-100 transition flex items-center justify-center space-x-4">
+              <div className="absolute inset-x-0 bottom-[-0.1%] h-2/6 bg-[#744ce966] opacity-0 group-hover:opacity-100 transition flex items-center justify-center space-x-4">
                 <button 
                   type="button" 
                   onClick={triggerFileInput} 
-                  className="text-white text-xl focus:outline-none"
+                  className="text-white text-xl cursor-pointer"
                 >
                   <FiUpload />
                 </button>
@@ -216,7 +219,7 @@ const ProfilePage = () => {
                     setAvatarPreview(null);
                     fileInputRef.current.value = null;
                   }}
-                  className="text-white text-xl focus:outline-none"
+                  className="text-white text-xl cursor-pointer"
                 >
                   <FiTrash />
                 </button>
@@ -234,11 +237,7 @@ const ProfilePage = () => {
             <p className="text-center text-sm text-gray-400">Дата реєстрації: 2024-06-20</p>
           </div>
 
-          {/* Блок з особистими даними з насиченою тінню */}
-          <div
-            className="col-span-2 space-y-6 bg-white rounded-xl p-6 border border-gray-200"
-            style={{ boxShadow: "0 10px 30px rgba(116, 76, 233, 0.5)" }}
-          >
+          <div className="col-span-2 space-y-6 bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
             <h3 className="text-xl font-semibold text-[#744ce9]">Особисті дані</h3>
             <p className="text-sm text-gray-500 mb-4">Заповніть інформацію про себе</p>
             
@@ -257,7 +256,7 @@ const ProfilePage = () => {
                     onChange={handleChange}
                     onFocus={() => setFocusedField(name)}
                     onBlur={() => setFocusedField(null)}
-                    className="w-full p-2 border border-indigo-200 rounded-md focus:outline-none"
+                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#744ce9] focus:border-transparent"
                   />
                 </div>
               ))}
@@ -272,7 +271,7 @@ const ProfilePage = () => {
                 whileTap={{ scale: 0.97 }}
                 className={`px-6 py-2 rounded-lg transition-all ${
                   isSubmitting ? "bg-indigo-400 cursor-not-allowed" : "bg-[#744ce9] text-white"
-                } focus:outline-none`}
+                } focus:outline-none focus:ring-2 focus:ring-[#744ce9] focus:ring-offset-2 cursor-pointer`}
               >
                 {isSubmitting ? "Збереження..." : "Зберегти зміни"}
               </motion.button>
