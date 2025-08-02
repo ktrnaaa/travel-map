@@ -3,7 +3,7 @@ import { FaGoogle, FaUser, FaLock } from 'react-icons/fa';
 import LoginTelegramButton from './TelegramLoginButton';
 import axios from 'axios';
 
- const LoginPage = () => {
+const LoginPage = () => {
   const [isRegister, setIsRegister] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
@@ -45,7 +45,8 @@ import axios from 'axios';
         console.log('Відповідь від сервера:', response.data);
         setSuccess('Реєстрація успішна! Ви можете увійти.');
         setFormData({ username: '', email: '', password: '', confirmPassword: '' }); // Скидання форми
-        localStorage.setItem('token', response.data.token); // Збереження токена
+        localStorage.setItem('accessToken', response.data.accessToken); // Збереження access-токена
+        localStorage.setItem('refreshToken', response.data.refreshToken); // Збереження refresh-токена
       } catch (error) {
         console.error('Помилка реєстрації:', error.response?.data || error.message);
         setError(error.response?.data?.message || 'Помилка реєстрації. Спробуйте ще раз.');
@@ -64,7 +65,8 @@ import axios from 'axios';
         });
         console.log('Відповідь від сервера:', response.data);
         setSuccess('Успішний вхід!');
-        localStorage.setItem('token', response.data.token); // Збереження токена
+        localStorage.setItem('accessToken', response.data.accessToken); // Збереження access-токена
+        localStorage.setItem('refreshToken', response.data.refreshToken); // Збереження refresh-токена
         // TODO: Перенаправлення на іншу сторінку (наприклад, профіль)
       } catch (error) {
         console.error('Помилка входу:', error.response?.data || error.message);
