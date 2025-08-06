@@ -8,6 +8,7 @@ const LoginPage = () => {
   const [showReset, setShowReset] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleGoogleLogin = () => {
     // TODO: логика Google Login
@@ -15,18 +16,19 @@ const LoginPage = () => {
 
   const handleResetPassword = e => {
     e.preventDefault();
-    // TODO: логика отправки email для восстановления пароля
+    // TODO: логика відправки email для відновлення пароля
     setShowReset(false);
     setResetEmail('');
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#F4EFFF] to-[#744ce9]/10">
+      <h1 className="sr-only">Авторизація</h1>
       <form
         className="bg-white p-10 rounded-xl shadow-md w-full max-w-md transition-all duration-300"
         onSubmit={e => e.preventDefault()}
       >
-        <h2 className="text-3xl font-bold mb-8 text-center text-[#744ce9] drop-shadow">
+        <h2 className="text-2xl font-bold mb-8 text-center text-[#744ce9] drop-shadow">
           {isRegister ? 'Реєстрація' : 'Вхід'}
         </h2>
 
@@ -72,24 +74,24 @@ const LoginPage = () => {
           <div className="relative mb-5">
             <FaLock className="absolute left-3 top-4 text-[#744ce9]" />
             <input
-              type="password"
+              type={showConfirmPassword ? 'text' : 'password'}
               placeholder="Підтвердіть пароль"
               className="w-full pl-10 pr-3 py-3 border border-indigo-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#744ce9] transition-all"
             />
             <button
               type="button"
               className="absolute right-3 top-4 text-[#744ce9] focus:outline-none"
-              onClick={() => setShowPassword(v => !v)}
+              onClick={() => setShowConfirmPassword(v => !v)}
               tabIndex={-1}
             >
-              {showPassword ? <FaEye /> : <FaEyeSlash />}
+              {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
             </button>
           </div>
         )}
 
         <button
           type="submit"
-          className="w-full bg-[#744ce9] text-white py-3 rounded-lg font-semibold hover:bg-[#5d39b3] transition mb-4 shadow"
+          className="w-full bg-[#744ce9] text-base text-white py-3 rounded-lg font-semibold hover:bg-[#5d39b3] transition mb-4 shadow"
         >
           {isRegister ? 'Зареєструватися' : 'Увійти'}
         </button>

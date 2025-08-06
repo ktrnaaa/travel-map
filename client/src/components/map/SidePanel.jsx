@@ -171,7 +171,7 @@ const SidePanel = ({ isOpen, onClose, markerData, onEdit, onDelete }) => {
               <div className="flex justify-between items-start">
                 <div className="flex-1 pr-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-xl font-bold">{markerData.title || 'Маркер без назви'}</h2>
+                    <h2 className="text-2xl font-bold">{markerData.title || 'Маркер без назви'}</h2>
                     {/* Иконка удаления */}
                     <button
                       onClick={handleDeleteClick}
@@ -183,7 +183,7 @@ const SidePanel = ({ isOpen, onClose, markerData, onEdit, onDelete }) => {
                     </button>
                   </div>
                   {markerData.category && (
-                    <span className="inline-block bg-blue-800 bg-opacity-80 px-3 py-1 rounded-full text-sm font-medium text-white border border-blue-500">
+                    <span className="inline-block bg-blue-800 bg-opacity-80 px-3 py-1 rounded-full text-base font-medium text-white border border-blue-500">
                       {getCategoryDisplayName(markerData.category)}
                     </span>
                   )}
@@ -202,7 +202,7 @@ const SidePanel = ({ isOpen, onClose, markerData, onEdit, onDelete }) => {
             <div className="p-6 space-y-6">
               {/* Координати */}
               <div>
-                <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Координати</h3>
+                <h2 className="text-base font-semibold text-gray-500 uppercase mb-2">Координати</h2>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-sm text-gray-700">Широта: {markerData.lat?.toFixed(6)}</p>
                   <p className="text-sm text-gray-700">Довгота: {markerData.lng?.toFixed(6)}</p>
@@ -212,7 +212,7 @@ const SidePanel = ({ isOpen, onClose, markerData, onEdit, onDelete }) => {
               {/* Описание */}
               {markerData.description && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Опис</h3>
+                  <h3 className="text-base font-semibold text-gray-500 uppercase mb-2">Опис</h3>
                   <div className="bg-gray-50 p-3 rounded-lg">
                     <p className="text-gray-700 leading-relaxed">{markerData.description}</p>
                   </div>
@@ -222,7 +222,7 @@ const SidePanel = ({ isOpen, onClose, markerData, onEdit, onDelete }) => {
               {/* Теги */}
               {markerData.tags && markerData.tags.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Мітки</h3>
+                  <h3 className="text-base font-semibold text-gray-500 uppercase mb-2">Мітки</h3>
                   <div className="flex flex-wrap gap-2">
                     {markerData.tags.map((tag, index) => (
                       <span
@@ -239,7 +239,9 @@ const SidePanel = ({ isOpen, onClose, markerData, onEdit, onDelete }) => {
               {/* Изображения */}
               {markerData.fileUrls && markerData.fileUrls.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">Зображення</h3>
+                  <h3 className="text-base font-semibold text-gray-500 uppercase mb-2">
+                    Зображення
+                  </h3>
                   <div className="grid grid-cols-2 gap-3">
                     {markerData.fileUrls.map((url, index) => (
                       <div
@@ -278,7 +280,9 @@ const SidePanel = ({ isOpen, onClose, markerData, onEdit, onDelete }) => {
                           clipRule="evenodd"
                         />
                       </svg>
-                      <span className="text-sm font-medium text-yellow-800">Приватний маркер</span>
+                      <span className="text-base font-medium text-yellow-800">
+                        Приватний маркер
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -287,7 +291,7 @@ const SidePanel = ({ isOpen, onClose, markerData, onEdit, onDelete }) => {
               {/* Дата создания */}
               {markerData.createdAt && (
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-500 uppercase mb-2">
+                  <h3 className="text-base font-semibold text-gray-500 uppercase mb-2">
                     Дата створення
                   </h3>
                   <div className="bg-gray-50 p-3 rounded-lg">
@@ -303,7 +307,7 @@ const SidePanel = ({ isOpen, onClose, markerData, onEdit, onDelete }) => {
                 <div className="flex gap-3">
                   <button
                     onClick={handleEdit}
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50"
+                    className="flex-1 bg-[#744ce9] border-0 hover:bg-[#5d39b3] text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50"
                     disabled={showDeleteConfirm || showShareModal}
                   >
                     <svg
@@ -323,7 +327,7 @@ const SidePanel = ({ isOpen, onClose, markerData, onEdit, onDelete }) => {
                   </button>
                   <button
                     onClick={handleShareClick}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50"
+                    className="flex-1 bg-[#744ce9] border-0 hover:hover:bg-[#5d39b3] text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center cursor-pointer disabled:opacity-50"
                     disabled={showDeleteConfirm || showShareModal}
                   >
                     <MdShare className="w-4 h-4 mr-2" />
@@ -358,13 +362,13 @@ const SidePanel = ({ isOpen, onClose, markerData, onEdit, onDelete }) => {
               <div className="flex gap-3">
                 <button
                   onClick={cancelDelete}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 border-0 bg-[#E0E0E0] rounded-lg text-black font-semibold duration-200 cursor-pointer hover:bg-[#CCCCCC] transition-colors"
                 >
                   Скасувати
                 </button>
                 <button
                   onClick={confirmDelete}
-                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  className="flex-1 px-4 py-2 border-0 bg-red-600 text-white font-semibold rounded-lg cursor-pointer hover:bg-red-700 transition-colors duration-200"
                 >
                   Видалити
                 </button>
