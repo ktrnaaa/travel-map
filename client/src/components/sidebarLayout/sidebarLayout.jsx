@@ -17,11 +17,11 @@ const SidebarLayout = ({ children }) => {
   return (
     <div className="flex min-h-screen bg-[#F3F3F3]">
       <div className="fixed left-0 top-0 h-full w-64 bg-white p-6 flex flex-col">
-        <h1 className="text-2xl font-bold mb-8">Особистий кабінет</h1>
+        <h1 className="text-2xl font-bold mb-8 text-[#744ce9]">Особистий кабінет</h1>
 
         <div className="mb-8">
           <p className="text-[#744ce9]">Вітаємо</p>
-          <p className="text-xl font-semibold">Користувач!</p>
+          <p className="text-xl text-[#744ce9] font-semibold">Користувач!</p>
         </div>
 
         <nav className="flex flex-col justify-between h-full">

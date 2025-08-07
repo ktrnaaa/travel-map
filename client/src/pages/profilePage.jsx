@@ -98,7 +98,7 @@ const ProfilePage = () => {
 
   
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8 bg-white rounded-lg">
+    <div className="max-w-auto min-h-full mx-auto px-4 py-8 bg-white rounded-lg mb-10">
       <style jsx>{`
         :focus:not(:focus-visible) {
           outline: none;
@@ -127,7 +127,8 @@ const ProfilePage = () => {
           Повернутись до карти
         </motion.button>
 
-        <div className="relative w-full max-w-md">
+
+        <div className="relative w-full max-w-3xl">
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <input
             type="text"
@@ -167,7 +168,7 @@ const ProfilePage = () => {
             <span className="absolute -top-1 -right-1 bg-green-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">5</span>
           </motion.button>
 
-          <p className="text-sm font-medium text-gray-700">Ім'я Прізвище</p>
+          <p className="text-base font-medium text-gray-700">Ім'я Прізвище</p>
           {avatarPreview ? (
             <img src={avatarPreview} alt="avatar" className="w-8 h-8 rounded-full object-cover shadow cursor-pointer" />
           ) : (
@@ -178,15 +179,13 @@ const ProfilePage = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleLogout}
-            className="text-[#744ce9] text-xl p-2 rounded cursor-pointer"
+            className="text-[#dc2626] text-xl p-2 rounded cursor-pointer"
             title="Вихід"
           >
             <FiLogOut />
           </motion.button>
         </div>
       </div>
-     
-      <h1 className="text-3xl font-bold text-[#744ce9] mb-2">Ваш профіль</h1>
       
       <form onSubmit={handleSubmit}>
         <motion.div 
@@ -197,18 +196,24 @@ const ProfilePage = () => {
         >
           
           <div className="col-span-1 flex flex-col items-center justify-start bg-[#F4EFFF] rounded-xl p-6 shadow-lg">
-            <h3 className="text-xl font-semibold text-[#744ce9] mb-4 self-start">Фото профілю</h3>
+            <div className="w-40 h-10"></div>
             <div className="relative group w-40 h-40 rounded-full overflow-hidden bg-white flex items-center justify-center shadow-md cursor-pointer">
               {avatarPreview ? (
                 <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
                 <span className="text-[#744ce9] text-4xl font-semibold">ІП</span>
               )}
-              <div className="absolute inset-x-0 bottom-[-0.1%] h-2/6 bg-[#744ce966] opacity-0 group-hover:opacity-100 transition flex items-center justify-center space-x-4">
+              <div className="absolute inset-x-0 bottom-[-0.1%] h-2/6 bg-[#744ce9b3] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center space-x-1">
                 <button 
                   type="button" 
                   onClick={triggerFileInput} 
-                  className="text-white text-xl cursor-pointer"
+                  className="text-white text-xl cursor-pointer p-2 rounded-lg hover:bg-[#5d39b380] transition-all duration-200"
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    fontWeight: 600,
+                    borderRadius: '8px',
+                  }}
                 >
                   <FiUpload />
                 </button>
@@ -219,13 +224,20 @@ const ProfilePage = () => {
                     setAvatarPreview(null);
                     fileInputRef.current.value = null;
                   }}
-                  className="text-white text-xl cursor-pointer"
+                  className="text-white text-xl cursor-pointer p-2 rounded-lg hover:bg-[#5d39b380] transition-all duration-200"
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    fontWeight: 600,
+                    borderRadius: '8px',
+                  }}
                 >
                   <FiTrash />
                 </button>
               </div>
             </div>
-            <p className="text-center text-xs text-gray-500 mt-2">Підтримка: JPG, PNG, WEBP. До 10 МБ</p>
+            <div className="w-40 h-10"></div>
+            <p className="text-center text-base text-gray-500 mt-2">Підтримка: JPG, PNG, WEBP. До 10 МБ</p>
             <input 
               type="file" 
               ref={fileInputRef} 
@@ -233,18 +245,17 @@ const ProfilePage = () => {
               accept="image/jpeg, image/png, image/webp" 
               className="hidden" 
             />
-            <p className="text-center text-sm text-gray-400 mt-4">Ваш ID: 22222</p>
-            <p className="text-center text-sm text-gray-400">Дата реєстрації: 2024-06-20</p>
+            <p className="text-center text-base text-gray-400 mt-4">Ваш ID: 22222</p>
+            <p className="text-center text-base text-gray-400">Дата реєстрації: 2024-06-20</p>
           </div>
 
           <div className="col-span-2 space-y-6 bg-white rounded-xl p-6 border border-gray-200 shadow-lg">
-            <h3 className="text-xl font-semibold text-[#744ce9]">Особисті дані</h3>
-            <p className="text-sm text-gray-500 mb-4">Заповніть інформацію про себе</p>
+            <h2 className="text-2xl font-semibold text-[#744ce9]">Особисті дані</h2>
             
             <div className="grid grid-cols-2 gap-4">
               {["firstName", "lastName", "middleName", "location", "email", "phone"].map((name) => (
                 <div key={name} className="relative w-full">
-                  <label htmlFor={name} className="block text-sm text-gray-500 mb-1">
+                  <label htmlFor={name} className="block text-lg text-gray-500 mb-1">
                     {name === "firstName" ? "Ім'я" : name === "lastName" ? "Прізвище" : name === "middleName" ? "По батькові" : name === "location" ? "Місце" : name === "email" ? "Email" : "Телефон"}
                   </label>
                   <input
@@ -267,13 +278,29 @@ const ProfilePage = () => {
               <motion.button
                 type="submit"
                 disabled={isSubmitting}
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 className={`px-6 py-2 rounded-lg transition-all ${
-                  isSubmitting ? "bg-indigo-400 cursor-not-allowed" : "bg-[#744ce9] text-white"
-                } focus:outline-none focus:ring-2 focus:ring-[#744ce9] focus:ring-offset-2 cursor-pointer`}
+                  isSubmitting 
+                    ? "bg-gray-400 cursor-not-allowed" 
+                    : "bg-[#32CD32] hover:bg-[#2EB94D] text-white"
+                } focus:outline-none focus:ring-2 focus:ring-[#744ce9] focus:ring-offset-2 cursor-pointer border-none font-semibold`}
+                style={{
+                  transition: 'background-color 0.2s ease',
+                  borderRadius: '8px',
+                }}
               >
-                {isSubmitting ? "Збереження..." : "Зберегти зміни"}
+                {isSubmitting ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Збереження...
+                  </span>
+                ) : (
+                  "Зберегти зміни"
+                )}
               </motion.button>
             </div>
           </div>
