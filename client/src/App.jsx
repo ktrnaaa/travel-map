@@ -63,6 +63,14 @@ function App() {
             </SidebarLayout>
           }
         />
+        <Route
+          path="/auth"
+          element={
+            <SidebarLayout>
+              <div>налаштування авторизації</div>
+            </SidebarLayout>
+          }
+        />
         <Route path="/login" element={<LoginPage />} />
       </Routes>
     </div>

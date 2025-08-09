@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 const supportSchema = new Schema({
-  userId: { type: Number, required: true },  // Додано ID користувача з Telegram
+  userId: { type: Number },  // Додано ID користувача з Telegram
   username: String,                         // Юзернейм 
   name: String,                             // Ім'я користувача
   email: String,                            // Email 

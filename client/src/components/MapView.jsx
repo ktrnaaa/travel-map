@@ -2,8 +2,8 @@ import axios from 'axios';
 import L from 'leaflet';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import CreatableSelect from 'react-select/creatable';
 import { components } from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 
 import 'leaflet/dist/leaflet.css';
 import AuthMenu from './map/AuthMenu.jsx';
@@ -564,7 +564,9 @@ const MapView = () => {
 
   return (
     <div>
-      <div ref={mapRef} className="w-auto h-screen"></div>
+      <div ref={mapRef} className="w-auto h-screen">
+        <h1 className="sr-only">Мапа</h1>
+      </div>
 
       {modalOpen && (
         <div
@@ -573,12 +575,10 @@ const MapView = () => {
           w-11/12 sm:w-[450px] border-gray-100"
         >
           <div className="relative bg-gradient-to-r from-blue-600 to-indigo-700 p-5 sm:p-6 pb-7 rounded-t-2xl">
-            <h3 className="text-xl sm:text-2xl font-semibold text-white leading-tight">
+            <h3 className="text-2xl sm:text-2xl font-semibold text-white leading-tight">
               Створення маркера
             </h3>
-            <p className="text-blue-100 mt-1 text-xs sm:text-sm">
-              Додайте інформацію про нову локацію
-            </p>
+            <p className="text-blue-100 mt-1 text-base">Додайте інформацію про нову локацію</p>
 
             <div className="absolute -bottom-4 left-0 right-0 h-8 bg-white rounded-full"></div>
           </div>
@@ -592,7 +592,7 @@ const MapView = () => {
                 <div className="group mb-3">
                   <label
                     htmlFor="title"
-                    className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5 group-focus-within:text-blue-600 transition duration-200"
+                    className="inline-block text-sm font-semibold uppercase text-gray-500 mb-1.5 group-focus-within:text-blue-600 transition duration-200"
                   >
                     НАЗВА
                   </label>
@@ -609,7 +609,7 @@ const MapView = () => {
                     required
                   />
                 </div>
-                <span className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5">
+                <span className="inline-block text-sm font-semibold uppercase text-gray-500 mb-1.5">
                   Категорія
                 </span>
                 <CreatableSelect
@@ -641,6 +641,7 @@ const MapView = () => {
                     </div>
                   )}
                   components={{ Option: OptionWithDelete }}
+                  noOptionsMessage={() => 'Поки не створено жодної категорії'}
                 />
 
                 {
@@ -785,7 +786,7 @@ const MapView = () => {
               </div>
               {/*Input для завантаження файлів*/}
               <div className="pt-1">
-                <label className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5">
+                <label className="inline-block text-sm font-semibold uppercase text-gray-500 mb-1.5">
                   ЗОБРАЖЕННЯ/ВІДЕО
                 </label>
                 <input
@@ -945,7 +946,7 @@ const MapView = () => {
               </div>
               <div>
                 <label
-                  className="inline-block text-xs font-semibold uppercase text-gray-500 mb-1.5"
+                  className="inline-block text-sm font-semibold uppercase text-gray-500 mb-1.5"
                   htmlFor="description"
                 >
                   Опис
@@ -967,9 +968,9 @@ const MapView = () => {
               <button
                 type="button"
                 onClick={handleModalClose}
-                className="order-2 sm:order-1 px-5 py-2.5 sm:flex-1 border-2 border-red-500 rounded-xl font-medium
-                    text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-600
-                    transition-all duration-200 text-sm"
+                className="order-2 sm:order-1 px-5 py-2.5 sm:flex-1 border-0 bg-[#E0E0E0] rounded-lg font-semibold
+                    text-black text-base hover:bg-[#CCCCCC]
+                    transition-colors duration-200 cursor-pointer"
                 disabled={loading}
               >
                 Скасувати
@@ -978,12 +979,10 @@ const MapView = () => {
                 type="submit"
                 disabled={loading}
                 className={`order-1 sm:order-2 px-5 py-2.5 sm:flex-1 ${
-                  loading
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800'
-                } rounded-xl font-medium
-                    text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/30
-                    transition-all duration-200 text-sm flex justify-center items-center`}
+                  loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#32CD32] hover:bg-[#2EB94D]'
+                } rounded-lg font-semibold
+                    text-white cursor-pointer
+                    transition-colors duration-200 border-0 text-base flex justify-center items-center`}
               >
                 {loading ? (
                   <>
